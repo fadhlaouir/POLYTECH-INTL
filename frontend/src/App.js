@@ -1,58 +1,76 @@
-import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
-import './App.css';
+/* -------------------------------------------------------------------------- */
+/*                                Dependencies                                */
+/* -------------------------------------------------------------------------- */
+// Packages
+import React from "react";
+import PropTypes from "prop-types";
+import { useHistory } from "react-router-dom";
+import "moment-timezone";
+import axios from "axios";
 
-function App() {
+// redux
+import { useDispatch } from "react-redux";
+
+// UI Components
+import { Layout, notification } from "antd";
+
+// Local components
+import TopBar from "./mainLayout/TopBar";
+import SideMenu from "./mainLayout/SideMenu";
+import { $logout } from "./reducers/Session.slice";
+
+// Style config
+import "./App.css";
+
+/* -------------------------------------------------------------------------- */
+/*                                     APP                                    */
+/* -------------------------------------------------------------------------- */
+function App({ children }) {
+  /* ---------------------------------- HOOKS --------------------------------- */
+  const { Footer, Content } = Layout;
+  const dispatch = useDispatch();
+  const history = useHistory();
+
+  /* ----------------------------- RENDER HELPERS ----------------------------- */
+  // Handle expired tokens wherever they arise
+  axios.interceptors.response.use(
+    (response) => {
+      return response;
+    },
+    (error) => {
+      if (error && error.response && error.response.status === 401) {
+        dispatch($logout());
+        history.push("/");
+        notification.error({
+          message: "Expired Session",
+          placement: "topRight",
+        });
+      } else if (error) {
+        notification.error({
+          message: `unknown Error : ${error}`,
+          placement: "topRight",
+        });
+      }
+      return error;
+    }
+  );
+  /* -------------------------------- RENDERING ------------------------------- */
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
+    <div id="app">
+      <Layout className="main-layout">
+        <TopBar />
+        <Layout>
+          <SideMenu />
+          <Content className="main-layout-content">{children}</Content>
+        </Layout>
+        <Footer />
+      </Layout>
     </div>
   );
 }
+
+App.propTypes = {
+  children: PropTypes.element,
+};
 
 export default App;

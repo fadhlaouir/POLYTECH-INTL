@@ -1,0 +1,12 @@
+.ant-layout-sider {
+    background-color: red !important;
+    color: black !important;
+}
+
+.ant-typography {
+    padding-right: 20px;
+}
+
+.logo {
+    width: 150px !important;
+}
