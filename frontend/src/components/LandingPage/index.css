@@ -1,11 +1,11 @@
 .landing-page {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: row;
-  height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    height: 100vh;
+}
 
-  .landing-page-spin {
+.landing-page-spin {
     font-size: 200px
-  }
 }

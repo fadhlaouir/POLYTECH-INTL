@@ -15,8 +15,16 @@ function SideMenu() {
   const [selected, setSelected] = useState(null);
   const routes = [
     {
-      path: "/",
-      name: "Landing page",
+      path: "/dashboard",
+      name: "Dashboard",
+    },
+    {
+      path: "/teatchers",
+      name: "Teatchers",
+    },
+    {
+      path: "/students",
+      name: "Students",
     },
   ];
 
@@ -33,12 +41,7 @@ function SideMenu() {
     <Sider>
       <Menu defaultSelectedKeys={["0"]} selectedKeys={selected} mode="vertical">
         {routes.map((item, index) => (
-          <Menu.Item
-            className={`menu-side-item ${
-              pathname === item.path && `menu-side-item-active-${item.name}`
-            }`}
-            key={index}
-          >
+          <Menu.Item className="menu-side-item" key={index}>
             <Link to={item.path}>{item.name}</Link>
           </Menu.Item>
         ))}

@@ -8,8 +8,11 @@ import {
 
 // route components
 import App from "./App";
+import Dashboard from "./pages/Dashboard";
 import LoginPage from "./pages/LoginPage";
 import NotFoundPage from "./pages/shared/NotFoundPage";
+import Students from "./pages/Students";
+import Teatchers from "./pages/Teatchers";
 
 const getSessionToken = () => localStorage.getItem("access_token");
 
@@ -42,6 +45,9 @@ export const renderRoutes = () => (
         component={() => <div>Landing page</div>}
         layout={App}
       />
+      <LayoutRoute exact path="/dashboard" component={Dashboard} layout={App} />
+      <LayoutRoute exact path="/teatchers" component={Teatchers} layout={App} />
+      <LayoutRoute exact path="/students" component={Students} layout={App} />
       <Route
         exact
         path="/login"
