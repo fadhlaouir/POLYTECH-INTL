@@ -1,82 +1,99 @@
-import { Table, Tag, Space } from "antd";
+import { Table, Tag, Space, Row, Col, Button, Modal, notification } from "antd";
 import { useEffect, useState } from "react";
-
+import {
+  ExclamationCircleOutlined,
+  ArrowLeftOutlined,
+} from "@ant-design/icons";
+import { unwrapResult } from "@reduxjs/toolkit";
 import { useSelector, useDispatch } from "react-redux";
 
-import { fetchAllUsers, selectAllUser } from "../../reducers/User.slice";
-
-const { Column, ColumnGroup } = Table;
-
-const data = [
-  {
-    key: "1",
-    firstName: "John",
-    lastName: "Brown",
-    age: 32,
-    address: "New York No. 1 Lake Park",
-    tags: ["nice", "developer"],
-  },
-  {
-    key: "2",
-    firstName: "Jim",
-    lastName: "Green",
-    age: 42,
-    address: "London No. 1 Lake Park",
-    tags: ["loser"],
-  },
-  {
-    key: "3",
-    firstName: "Joe",
-    lastName: "Black",
-    age: 32,
-    address: "Sidney No. 1 Lake Park",
-    tags: ["cool", "teacher"],
-  },
-];
+import {
+  deleteUser,
+  fetchAllUsers,
+  selectAllUser,
+} from "../../reducers/User.slice";
+import UpdateTeatcher from "../../components/LandingPage/UpdateTeatchers";
 
 function Teatchers() {
-  const [instructors, setInstructors] = useState([]);
   const teatchers = useSelector(selectAllUser);
+  const { confirm } = Modal;
   const dispatch = useDispatch();
-
   useEffect(() => {
     dispatch(fetchAllUsers());
   }, []);
 
+  const removeTeatcher = (data) => {
+    confirm({
+      title: "Are you sure ?",
+      icon: <ExclamationCircleOutlined />,
+      onOk() {
+        dispatch(deleteUser(data.id))
+          .then(unwrapResult)
+          .then(() => {
+            notification.success({
+              message: "Delete Instructor",
+              description: "Instructor was Deleted successfully",
+            });
+            dispatch(fetchAllUsers());
+          })
+          .catch(() =>
+            notification.error({
+              message: "Delete Instructor",
+              description: "An error occured",
+            })
+          );
+      },
+    });
+  };
+
+  const teatcher = teatchers
+    ?.filter((b) => b.isInstructor)
+    .map((b) => ({
+      id: b.id,
+      userName: b.username,
+      email: b.email,
+      speciality: b.speciality,
+    }));
+
+  const TEATCHER_COLUMN = [
+    {
+      title: "Name",
+      key: "userName",
+      dataIndex: "userName",
+    },
+    {
+      title: "Email",
+      key: "email",
+      dataIndex: "email",
+    },
+    {
+      title: "Speciality",
+      key: "speciality",
+      dataIndex: "speciality",
+    },
+    {
+      render: (record) => (
+        <Row align="middle" justify="space-between">
+          <Col>
+            {console.log("record", record)}
+            <UpdateTeatcher data={record} />
+          </Col>
+          <Col>
+            <Button
+              type="primary"
+              onClick={() => removeTeatcher(record)}
+              danger
+            >
+              Remove
+            </Button>
+          </Col>
+        </Row>
+      ),
+    },
+  ];
+
   console.log("teatchers", teatchers);
-  return (
-    <Table dataSource={data}>
-      <ColumnGroup title="Name">
-        <Column title="First Name" dataIndex="firstName" key="firstName" />
-        <Column title="Last Name" dataIndex="lastName" key="lastName" />
-      </ColumnGroup>
-      <Column title="Age" dataIndex="age" key="age" />
-      <Column title="Address" dataIndex="address" key="address" />
-      <Column
-        title="Tags"
-        dataIndex="tags"
-        key="tags"
-        render={(tags) => (
-          <>
-            {tags.map((tag) => (
-              <Tag color="blue" key={tag}>
-                {tag}
-              </Tag>
-            ))}
-          </>
-        )}
-      />
-      <Column
-        title="Action"
-        key="action"
-        render={(text, record) => (
-          <Space size="middle">
-            <a>Delete</a>
-          </Space>
-        )}
-      />
-    </Table>
-  );
+  return <Table columns={TEATCHER_COLUMN} dataSource={teatcher} />;
 }
 
 export default Teatchers;
