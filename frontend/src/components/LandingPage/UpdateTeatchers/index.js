@@ -16,7 +16,7 @@ import {
 /* -------------------------------------------------------------------------- */
 /*                                Sieving Form                                */
 /* -------------------------------------------------------------------------- */
-function UpdateTeatcher({ onChange, onlyFormItems, data }) {
+function UpdateTeatcher({ onChange, onlyFormItems, record }) {
   /* ---------------------------------- HOOKS --------------------------------- */
   const [showModal, setShowModal] = useState(false);
   const dispatch = useDispatch();
@@ -26,15 +26,15 @@ function UpdateTeatcher({ onChange, onlyFormItems, data }) {
   }, []);
   /* ----------------------------- RENDER HELPERS ----------------------------- */
   /**
-   * @param {object} data
+   * @param {object} entry
    */
-  const onClickSubmit = (data) => {
-    console.log("dataaaaaaaaaaaaaa", data);
+  const onClickSubmit = (entry) => {
+    console.log("entry", entry);
     dispatch(
       updateUSer({
-        id: data.id,
+        id: record.id,
         fields: {
-          ...data,
+          ...entry,
         },
       })
     )
@@ -45,7 +45,7 @@ function UpdateTeatcher({ onChange, onlyFormItems, data }) {
           description: "Updated successfully",
         });
         setShowModal(!showModal);
-        dispatch(fetchUser(data.id));
+        dispatch(fetchUser(record.id));
       })
       .catch(() =>
         notification.error({
@@ -55,14 +55,13 @@ function UpdateTeatcher({ onChange, onlyFormItems, data }) {
       );
   };
   const [form] = Form.useForm();
-  console.log("data", data);
+  console.log("record", record);
   const sievingFormFields = [
     {
       key: "username",
       label: "username",
       placeholder: "username",
-      initialValue: data?.username,
-
+      initialValue: record?.username,
       rules: [
         {
           required: true,
@@ -70,7 +69,21 @@ function UpdateTeatcher({ onChange, onlyFormItems, data }) {
         },
       ],
     },
+    {
+      key: "email",
+      label: "Email",
+      placeholder: "email",
+      initialValue: record?.email,
+      disabled: true,
+      rules: [
+        {
+          required: true,
+          message: "email is required",
+        },
+      ],
+    },
   ];
+
   /* -------------------------------- RENDERING ------------------------------- */
   return (
     <div>
@@ -109,7 +122,7 @@ function UpdateTeatcher({ onChange, onlyFormItems, data }) {
 }
 
 UpdateTeatcher.propTypes = {
-  data: PropTypes.object,
+  record: PropTypes.object,
   onChange: PropTypes.func,
   onlyFormItems: PropTypes.bool,
 };

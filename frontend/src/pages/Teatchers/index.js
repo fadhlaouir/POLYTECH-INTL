@@ -50,7 +50,7 @@ function Teatchers() {
     ?.filter((b) => b.isInstructor)
     .map((b) => ({
       id: b.id,
-      userName: b.username,
+      username: b.username,
       email: b.email,
       speciality: b.speciality,
     }));
@@ -58,8 +58,8 @@ function Teatchers() {
   const TEATCHER_COLUMN = [
     {
       title: "Name",
-      key: "userName",
-      dataIndex: "userName",
+      key: "username",
+      dataIndex: "username",
     },
     {
       title: "Email",
@@ -75,8 +75,7 @@ function Teatchers() {
       render: (record) => (
         <Row align="middle" justify="space-between">
           <Col>
-            {console.log("record", record)}
-            <UpdateTeatcher data={record} />
+            <UpdateTeatcher record={record} />
           </Col>
           <Col>
             <Button
@@ -92,7 +91,6 @@ function Teatchers() {
     },
   ];
 
-  console.log("teatchers", teatchers);
   return <Table columns={TEATCHER_COLUMN} dataSource={teatcher} />;
 }
 
