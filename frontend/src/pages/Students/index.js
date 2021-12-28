@@ -1,69 +1,91 @@
-import { Table, Tag, Space } from "antd";
+import { Table, Tag, Space, Row, Col, Button, Modal, notification } from "antd";
+import { useEffect, useState } from "react";
+import {
+  ExclamationCircleOutlined,
+  ArrowLeftOutlined,
+} from "@ant-design/icons";
+import { unwrapResult } from "@reduxjs/toolkit";
+import { useSelector, useDispatch } from "react-redux";
 
-const { Column, ColumnGroup } = Table;
-
-const data = [
-  {
-    key: "1",
-    firstName: "John",
-    lastName: "Brown",
-    age: 32,
-    address: "New York No. 1 Lake Park",
-    tags: ["nice", "developer"],
-  },
-  {
-    key: "2",
-    firstName: "Jim",
-    lastName: "Green",
-    age: 42,
-    address: "London No. 1 Lake Park",
-    tags: ["loser"],
-  },
-  {
-    key: "3",
-    firstName: "Joe",
-    lastName: "Black",
-    age: 32,
-    address: "Sidney No. 1 Lake Park",
-    tags: ["cool", "teacher"],
-  },
-];
+import {
+  deleteUser,
+  fetchAllUsers,
+  selectAllUser,
+} from "../../reducers/User.slice";
+import UpdateTeatcher from "../../components/LandingPage/UpdateTeatchers";
 
 function Students() {
-  return (
-    // <Table dataSource={data}>
-    //   <ColumnGroup title="Name">
-    //     <Column title="First Name" dataIndex="firstName" key="firstName" />
-    //     <Column title="Last Name" dataIndex="lastName" key="lastName" />
-    //   </ColumnGroup>
-    //   <Column title="Age" dataIndex="age" key="age" />
-    //   <Column title="Address" dataIndex="address" key="address" />
-    //   <Column
-    //     title="Tags"
-    //     dataIndex="tags"
-    //     key="tags"
-    //     render={(tags) => (
-    //       <>
-    //         {tags.map((tag) => (
-    //           <Tag color="blue" key={tag}>
-    //             {tag}
-    //           </Tag>
-    //         ))}
-    //       </>
-    //     )}
-    //   />
-    //   <Column
-    //     title="Action"
-    //     key="action"
-    //     render={(text, record) => (
-    //       <Space size="middle">
-    //         <a>Delete</a>
-    //       </Space>
-    //     )}
-    //   />
-    // </Table>
-    <h1>Students</h1>
-  );
+  const Students = useSelector(selectAllUser);
+  const { confirm } = Modal;
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchAllUsers());
+  }, []);
+
+  const removeStudent = (data) => {
+    confirm({
+      title: "Are you sure ?",
+      icon: <ExclamationCircleOutlined />,
+      onOk() {
+        dispatch(deleteUser(data.id))
+          .then(unwrapResult)
+          .then(() => {
+            notification.success({
+              message: "Delete Student",
+              description: "Student was Deleted successfully",
+            });
+            dispatch(fetchAllUsers());
+          })
+          .catch(() =>
+            notification.error({
+              message: "Delete Student",
+              description: "An error occured",
+            })
+          );
+      },
+    });
+  };
+
+  const student = Students?.filter((b) => b.isStudent).map((b) => ({
+    id: b.id,
+    username: b.username,
+    email: b.email,
+    code: b.code,
+  }));
+
+  const STUDENT_COLUMN = [
+    {
+      title: "Name",
+      key: "username",
+      dataIndex: "username",
+    },
+    {
+      title: "Email",
+      key: "email",
+      dataIndex: "email",
+    },
+    {
+      title: "Code",
+      key: "code",
+      dataIndex: "code",
+    },
+    {
+      render: (record) => (
+        <Row align="middle" justify="space-between">
+          <Col>
+            <UpdateTeatcher record={record} />
+          </Col>
+          <Col>
+            <Button type="primary" onClick={() => removeStudent(record)} danger>
+              Remove
+            </Button>
+          </Col>
+        </Row>
+      ),
+    },
+  ];
+
+  return <Table columns={STUDENT_COLUMN} dataSource={student} />;
 }
 
 export default Students;
