@@ -65,15 +65,32 @@
     "code": {
       "type": "integer"
     },
+    "department": {
+      "model": "department",
+      "via": "users"
+    },
     "speciality": {
-      "type": "enumeration",
-      "enum": [
-        "It",
-        "English",
-        "French",
-        "Database",
-        "Communication"
-      ]
+      "model": "speciality",
+      "via": "users"
+    },
+    "availibilty": {
+      "type": "integer"
+    },
+    "level": {
+      "model": "level",
+      "via": "users"
+    },
+    "subjects": {
+      "via": "users",
+      "collection": "subject"
+    },
+    "room": {
+      "model": "room",
+      "via": "users"
+    },
+    "groupe": {
+      "model": "group",
+      "via": "users"
     }
   }
 }

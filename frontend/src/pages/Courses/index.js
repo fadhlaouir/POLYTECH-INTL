@@ -1,4 +1,4 @@
-import { Table, Row, Col, Button, Modal, notification } from "antd";
+import { Table, Row, Col, Button, Modal, notification, Tag } from "antd";
 import { useEffect } from "react";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 import { unwrapResult } from "@reduxjs/toolkit";
@@ -11,13 +11,21 @@ import {
 } from "../../reducers/User.slice";
 import UpdateTeatcher from "../../components/Teatchers/UpdateTeatchers";
 import CreateTeatcher from "../../components/Teatchers/CreateTeatcher";
+import {
+  fetchAllSubjects,
+  selectAllSubjects,
+} from "../../reducers/Speciality.slice";
+import CreateCourse from "../../components/Courses/CreateCourse";
+import UpdateCourse from "../../components/Courses/UpdateCourse";
 
-function Teatchers({ location }) {
-  const teatchers = useSelector(selectAllUser);
+function Courses({ location }) {
   const { confirm } = Modal;
   const dispatch = useDispatch();
+
+  const subjects = useSelector(selectAllSubjects);
+
   useEffect(() => {
-    dispatch(fetchAllUsers());
+    dispatch(fetchAllSubjects());
   }, []);
 
   const removeTeatcher = (data) => {
@@ -44,48 +52,20 @@ function Teatchers({ location }) {
     });
   };
 
-  const teatcher = location.department
-    ? teatchers
-        ?.filter(
-          (b) =>
-            b.isInstructor &&
-            b.department.name === location.department &&
-            b.level.name === location.level
-        )
-        .map((b) => ({
-          id: b.id,
-          username: b.username,
-          speciality: b.speciality?.name,
-          email: b.email,
-          department: b.department?.name,
-          availibilty: b.availibilty,
-        }))
-    : teatchers
-        ?.filter((b) => b.isInstructor)
-        .map((b) => ({
-          id: b.id,
-          username: b.username,
-          email: b.email,
-          speciality: b.speciality?.name,
-          department: b.department?.name,
-          availibilty: b.availibilty,
-        }));
-
+  const teatcher = subjects?.map((s) => ({
+    id: s.id,
+    name: s.name,
+    department: s.departments.map((dp) => dp?.name).join(" , "),
+    duration: s.duration,
+    teatcher: s.users.filter((us) => us.isInstructor).map((us) => us.username),
+    // availibilty: b.availibilty,
+  }));
+  console.log("subjects", subjects);
   const TEATCHER_COLUMN = [
     {
-      title: "Name",
-      key: "username",
-      dataIndex: "username",
-    },
-    {
-      title: "Email",
-      key: "email",
-      dataIndex: "email",
-    },
-    {
-      title: "Speciality",
-      key: "speciality",
-      dataIndex: "speciality",
+      title: "Course Name",
+      key: "name",
+      dataIndex: "name",
     },
     {
       title: "Department",
@@ -93,15 +73,20 @@ function Teatchers({ location }) {
       dataIndex: "department",
     },
     {
-      title: "Availibilty",
-      key: "availibilty",
-      dataIndex: "availibilty",
+      title: "Duration in hours",
+      key: "duration",
+      dataIndex: "duration",
+    },
+    {
+      title: "Teatcher",
+      key: "teatcher",
+      dataIndex: "teatcher",
     },
     {
       render: (record) => (
         <Row align="middle" justify="space-between">
           <Col>
-            <UpdateTeatcher record={record} />
+            <UpdateCourse record={record} />
           </Col>
           <Col>
             <Button
@@ -119,16 +104,11 @@ function Teatchers({ location }) {
 
   return (
     <div>
-      <h1>
-        Teatchers{" "}
-        {location.department
-          ? `Department: ${location.department} Level: ${location.level}`
-          : ""}
-      </h1>
-      <CreateTeatcher />
+      <h1>Courses</h1>
+      <CreateCourse />
       <Table columns={TEATCHER_COLUMN} dataSource={teatcher} />
     </div>
   );
 }
 
-export default Teatchers;
+export default Courses;

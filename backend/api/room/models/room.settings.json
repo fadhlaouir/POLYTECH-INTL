@@ -1,0 +1,36 @@
+{
+  "kind": "collectionType",
+  "collectionName": "rooms",
+  "info": {
+    "name": "Room"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true
+  },
+  "attributes": {
+    "capacity": {
+      "type": "integer"
+    },
+    "isAvailable": {
+      "type": "boolean"
+    },
+    "users": {
+      "via": "room",
+      "plugin": "users-permissions",
+      "collection": "user"
+    },
+    "department": {
+      "model": "department",
+      "via": "room"
+    },
+    "subjects": {
+      "via": "room",
+      "collection": "subject"
+    },
+    "groups": {
+      "via": "rooms",
+      "collection": "group"
+    }
+  }
+}

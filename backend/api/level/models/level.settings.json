@@ -1,0 +1,26 @@
+{
+  "kind": "collectionType",
+  "collectionName": "levels",
+  "info": {
+    "name": "Level"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true
+  },
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "departments": {
+      "collection": "department",
+      "via": "levels",
+      "dominant": true
+    },
+    "users": {
+      "via": "level",
+      "plugin": "users-permissions",
+      "collection": "user"
+    }
+  }
+}

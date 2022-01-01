@@ -1,0 +1,33 @@
+{
+  "kind": "collectionType",
+  "collectionName": "subjects",
+  "info": {
+    "name": "Subject"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true
+  },
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "users": {
+      "plugin": "users-permissions",
+      "collection": "user",
+      "via": "subjects",
+      "dominant": true
+    },
+    "room": {
+      "model": "room",
+      "via": "subjects"
+    },
+    "departments": {
+      "collection": "department",
+      "via": "subject"
+    },
+    "duration": {
+      "type": "integer"
+    }
+  }
+}

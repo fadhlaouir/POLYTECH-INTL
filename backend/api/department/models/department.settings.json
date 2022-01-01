@@ -1,0 +1,33 @@
+{
+  "kind": "collectionType",
+  "collectionName": "departments",
+  "info": {
+    "name": "Department"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true
+  },
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "users": {
+      "via": "department",
+      "plugin": "users-permissions",
+      "collection": "user"
+    },
+    "levels": {
+      "via": "departments",
+      "collection": "level"
+    },
+    "room": {
+      "via": "department",
+      "model": "room"
+    },
+    "subject": {
+      "via": "departments",
+      "model": "subject"
+    }
+  }
+}

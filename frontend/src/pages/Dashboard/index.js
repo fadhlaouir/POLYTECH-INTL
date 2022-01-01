@@ -4,11 +4,18 @@ import { Card, Col, Row } from "antd";
 
 import "./Dashboard.css";
 import { fetchAllUsers, selectAllUser } from "../../reducers/User.slice";
+import {
+  fetchDepartments,
+  selectDepartments,
+} from "../../reducers/Speciality.slice";
+
 function Dashboard() {
   const user = useSelector(selectAllUser);
+  const departments = useSelector(selectDepartments);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchAllUsers());
+    dispatch(fetchDepartments());
   }, []);
 
   return (
@@ -16,12 +23,17 @@ function Dashboard() {
       <Row align="middle" justify="space-around">
         <Col>
           <Card title="Number of teatchers">
-            <p>{user.filter((u) => u.isStudent).length}</p>
+            <p>{user.filter((u) => u.isInstructor).length}</p>
           </Card>
         </Col>
         <Col>
           <Card title="Number of Students">
-            <p>{user.filter((u) => u.isInstructor).length}</p>
+            <p>{user.filter((u) => u.isStudent).length}</p>
+          </Card>
+        </Col>
+        <Col>
+          <Card title="Number of Departments">
+            <p>{departments?.length}</p>
           </Card>
         </Col>
       </Row>

@@ -8,6 +8,8 @@ import {
 
 // route components
 import App from "./App";
+import CalendarView from "./pages/Calendar";
+import Courses from "./pages/Courses";
 import Dashboard from "./pages/Dashboard";
 import LoginPage from "./pages/LoginPage";
 import NotFoundPage from "./pages/shared/NotFoundPage";
@@ -48,6 +50,13 @@ export const renderRoutes = () => (
       <LayoutRoute exact path="/dashboard" component={Dashboard} layout={App} />
       <LayoutRoute exact path="/teatchers" component={Teatchers} layout={App} />
       <LayoutRoute exact path="/students" component={Students} layout={App} />
+      <LayoutRoute
+        exact
+        path="/calendar"
+        component={CalendarView}
+        layout={App}
+      />
+      <LayoutRoute exact path="/courses" component={Courses} layout={App} />
       <Route
         exact
         path="/login"

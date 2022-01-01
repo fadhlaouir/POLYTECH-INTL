@@ -26,21 +26,17 @@ import LandingPage from "./components/LandingPage";
 
 const persistor = persistStore(store);
 
-ReactDOM.render( <
-    React.StrictMode >
-    <
-    Provider store = { store } >
-    <
-    PersistGate persistor = { persistor } >
-    <
-    ConfigProvider >
-    <
-    Suspense fallback = { < LandingPage / > } > { renderRoutes() } < /Suspense> <
-    /ConfigProvider> <
-    /PersistGate> <
-    /Provider> <
-    /React.StrictMode>,
-    document.getElementById("root")
+ReactDOM.render(
+  <React.StrictMode>
+    <Provider store={store}>
+      <PersistGate persistor={persistor}>
+        <ConfigProvider>
+          <Suspense fallback={<LandingPage />}> {renderRoutes()} </Suspense>{" "}
+        </ConfigProvider>{" "}
+      </PersistGate>{" "}
+    </Provider>{" "}
+  </React.StrictMode>,
+  document.getElementById("root")
 );
 
 // If you want your app to work offline and load faster, you can change
