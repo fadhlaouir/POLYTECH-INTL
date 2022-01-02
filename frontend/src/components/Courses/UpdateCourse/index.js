@@ -18,14 +18,19 @@ import {
   fetchAllSpecialities,
   fetchDepartments,
   selectDepartments,
-  updateSubject,
 } from "../../../reducers/Speciality.slice";
 import {
   fetchGroups,
   fetchLevels,
-  selectGroups,
+  selectAlllevels,
   selectLevels,
 } from "../../../reducers/Level.slice";
+import { selectAllGroups, selectGroups } from "../../../reducers/Group.slice";
+import {
+  fetchAllDepartments,
+  selectAllDepartments,
+} from "../../../reducers/Department.slice";
+import { updateSubject } from "../../../reducers/Subject.slice";
 
 const { Option } = Select;
 
@@ -33,15 +38,15 @@ function UpdateCourse({ onChange, onlyFormItems, record }) {
   const [showModal, setShowModal] = useState(false);
   const dispatch = useDispatch();
 
-  const levels = useSelector(selectLevels);
+  const levels = useSelector(selectAlllevels);
   const users = useSelector(selectAllUser);
-  const departments = useSelector(selectDepartments);
-  const groups = useSelector(selectGroups);
+  const departments = useSelector(selectAllDepartments);
+  const groups = useSelector(selectAllGroups);
 
   const teatchers = users.filter((us) => us.isInstructor);
 
   useEffect(() => {
-    dispatch(fetchDepartments());
+    dispatch(fetchAllDepartments());
     dispatch(fetchAllUsers());
   }, []);
 
@@ -58,7 +63,7 @@ function UpdateCourse({ onChange, onlyFormItems, record }) {
       .then(unwrapResult)
       .then(() => {
         notification.success({
-          message: "Instructor",
+          message: "Course",
           description: "Updated successfully",
         });
         setShowModal(!showModal);
@@ -66,7 +71,7 @@ function UpdateCourse({ onChange, onlyFormItems, record }) {
       })
       .catch(() =>
         notification.error({
-          message: "Instructor",
+          message: "Course",
           description: "An error occured",
         })
       );

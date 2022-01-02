@@ -8,14 +8,19 @@ import {
   fetchDepartments,
   selectDepartments,
 } from "../../reducers/Speciality.slice";
+import {
+  fetchAllDepartments,
+  selectAllDepartments,
+} from "../../reducers/Department.slice";
 
 function Dashboard() {
   const user = useSelector(selectAllUser);
-  const departments = useSelector(selectDepartments);
+  const departments = useSelector(selectAllDepartments);
   const dispatch = useDispatch();
+
   useEffect(() => {
     dispatch(fetchAllUsers());
-    dispatch(fetchDepartments());
+    dispatch(fetchAllDepartments());
   }, []);
 
   return (

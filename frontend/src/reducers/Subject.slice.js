@@ -2,28 +2,33 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { API_ENDPOINT } from "../common/config";
 
-export const fetchAllSpecialities = createAsyncThunk(
-    "speciality/fetchAllSpecialities",
-    async() => {
-        const config = {
-            method: "get",
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-            },
-            url: `${API_ENDPOINT}/specialities`,
-        };
-        const payload = await axios(config);
-        return payload.data;
+export const fetchAllSubjects = createAsyncThunk(
+    "subject/fetchAllSubjects",
+    async(id, { rejectWithValue }) => {
+        try {
+            const config = {
+                method: "get",
+                url: `${API_ENDPOINT}/subjects`,
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+                },
+            };
+
+            const payload = await axios(config);
+            return payload.data;
+        } catch (err) {
+            return rejectWithValue(err.response.data);
+        }
     }
 );
 
-export const createSpeciality = createAsyncThunk(
-    "speciality/createSpeciality",
+export const createSubject = createAsyncThunk(
+    "subject/createSubject",
     async(data, { rejectWithValue }) => {
         try {
             const config = {
                 method: "post",
-                url: `${API_ENDPOINT}/specialities`,
+                url: `${API_ENDPOINT}/subjects`,
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("access_token")}`,
                 },
@@ -38,13 +43,13 @@ export const createSpeciality = createAsyncThunk(
     }
 );
 
-export const updateSpeciality = createAsyncThunk(
-    "speciality/updateSpeciality",
+export const updateSubject = createAsyncThunk(
+    "subject/updateSubject",
     async(data, { rejectWithValue }) => {
         try {
             const config = {
                 method: "put",
-                url: `${API_ENDPOINT}/specialities/${data.id}`,
+                url: `${API_ENDPOINT}/subjects/${data.id}`,
                 data: data.fields,
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("access_token")}`,
@@ -58,13 +63,13 @@ export const updateSpeciality = createAsyncThunk(
     }
 );
 
-export const deleteSpeciality = createAsyncThunk(
-    "speciality/deleteSpeciality",
+export const deleteSubject = createAsyncThunk(
+    "subject/deleteSubject",
     async(id, { rejectWithValue }) => {
         try {
             const config = {
                 method: "delete",
-                url: `${API_ENDPOINT}/specialities/${id}`,
+                url: `${API_ENDPOINT}/subjects/${id}`,
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("access_token")}`,
                 },
@@ -77,13 +82,13 @@ export const deleteSpeciality = createAsyncThunk(
     }
 );
 
-export const fetchSpeciality = createAsyncThunk(
-    "speciality/fetchSpeciality",
+export const fetchSubject = createAsyncThunk(
+    "subject/fetchSubject",
     async(id, { rejectWithValue }) => {
         try {
             const config = {
                 method: "get",
-                url: `${API_ENDPOINT}/specialities/${id}`,
+                url: `${API_ENDPOINT}/subjects/${id}`,
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("access_token")}`,
                 },
@@ -97,34 +102,33 @@ export const fetchSpeciality = createAsyncThunk(
     }
 );
 
-// Login Slice
-const Speciality = createSlice({
-    name: "Speciality",
+const Subject = createSlice({
+    name: "Subject",
     initialState: {
-        specialities: [],
-        speciality: null,
+        subjects: [],
+        subject: null,
         loading: false,
     },
     extraReducers: {
-        [fetchAllSpecialities.fulfilled]: (state, action) => {
-            state.specialities = action.payload;
+        [fetchAllSubjects.fulfilled]: (state, action) => {
+            state.subjects = action.payload;
             state.loading = false;
         },
-        [fetchAllSpecialities.pending]: (state) => {
+        [fetchAllSubjects.pending]: (state) => {
             state.loading = true;
         },
-        [fetchSpeciality.fulfilled]: (state, action) => {
-            state.speciality = action.payload;
+        [fetchSubject.fulfilled]: (state, action) => {
+            state.subject = action.payload;
             state.loading = false;
         },
-        [fetchSpeciality.pending]: (state) => {
+        [fetchSubject.pending]: (state) => {
             state.loading = true;
         },
     },
 });
 
-export default Speciality.reducer;
+export default Subject.reducer;
 
 // Selectors
-export const selectAllSpecialities = (state) => state.Speciality.specialities;
-export const selectSpeciality = (state) => state.Speciality.speciality;
+export const selectAllSubjects = (state) => state.Subject.subjects;
+export const selectSubject = (state) => state.Subject.subject;

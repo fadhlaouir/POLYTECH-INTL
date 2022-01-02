@@ -20,26 +20,32 @@ import {
 } from "../../../reducers/Speciality.slice";
 import { Group } from "../../../common/constants";
 import {
+  fetchAlllevels,
   fetchLevels,
-  selectGroups,
+  selectAlllevels,
   selectLevels,
 } from "../../../reducers/Level.slice";
+import { selectAllGroups, selectGroups } from "../../../reducers/Group.slice";
+import {
+  fetchAllDepartments,
+  selectAllDepartments,
+} from "../../../reducers/Department.slice";
 
 function CreateStudent({ onChange, onlyFormItems, record }) {
   const [showModal, setShowModal] = useState(false);
 
   const dispatch = useDispatch();
 
-  const levels = useSelector(selectLevels);
-  const departments = useSelector(selectDepartments);
-  const groups = useSelector(selectGroups);
+  const levels = useSelector(selectAlllevels);
+  const departments = useSelector(selectAllDepartments);
+  const groups = useSelector(selectAllGroups);
 
   console.log("levels", levels);
 
   useEffect(() => {
-    dispatch(fetchLevels());
+    dispatch(fetchAlllevels());
     dispatch(fetchAllSpecialities());
-    dispatch(fetchDepartments());
+    dispatch(fetchAllDepartments());
     dispatch(fetchAllUsers());
   }, []);
 

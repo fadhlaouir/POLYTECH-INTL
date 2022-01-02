@@ -1,29 +1,30 @@
+/* eslint-disable no-param-reassign */
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { API_ENDPOINT } from "../common/config";
 
-export const fetchAllSpecialities = createAsyncThunk(
-    "speciality/fetchAllSpecialities",
+export const fetchAllDepartments = createAsyncThunk(
+    "department/fetchAllDepartments",
     async() => {
         const config = {
             method: "get",
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("access_token")}`,
             },
-            url: `${API_ENDPOINT}/specialities`,
+            url: `${API_ENDPOINT}/departments`,
         };
         const payload = await axios(config);
         return payload.data;
     }
 );
 
-export const createSpeciality = createAsyncThunk(
-    "speciality/createSpeciality",
+export const createDepartment = createAsyncThunk(
+    "department/createDepartment",
     async(data, { rejectWithValue }) => {
         try {
             const config = {
                 method: "post",
-                url: `${API_ENDPOINT}/specialities`,
+                url: `${API_ENDPOINT}/departments`,
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("access_token")}`,
                 },
@@ -38,13 +39,13 @@ export const createSpeciality = createAsyncThunk(
     }
 );
 
-export const updateSpeciality = createAsyncThunk(
-    "speciality/updateSpeciality",
+export const updateDepartment = createAsyncThunk(
+    "department/updateDepartment",
     async(data, { rejectWithValue }) => {
         try {
             const config = {
                 method: "put",
-                url: `${API_ENDPOINT}/specialities/${data.id}`,
+                url: `${API_ENDPOINT}/departments/${data.id}`,
                 data: data.fields,
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("access_token")}`,
@@ -58,13 +59,13 @@ export const updateSpeciality = createAsyncThunk(
     }
 );
 
-export const deleteSpeciality = createAsyncThunk(
-    "speciality/deleteSpeciality",
+export const deleteDepartment = createAsyncThunk(
+    "department/deleteDepartment",
     async(id, { rejectWithValue }) => {
         try {
             const config = {
                 method: "delete",
-                url: `${API_ENDPOINT}/specialities/${id}`,
+                url: `${API_ENDPOINT}/departments/${id}`,
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("access_token")}`,
                 },
@@ -77,13 +78,13 @@ export const deleteSpeciality = createAsyncThunk(
     }
 );
 
-export const fetchSpeciality = createAsyncThunk(
-    "speciality/fetchSpeciality",
+export const fetchDepartment = createAsyncThunk(
+    "department/fetchDepartment",
     async(id, { rejectWithValue }) => {
         try {
             const config = {
                 method: "get",
-                url: `${API_ENDPOINT}/specialities/${id}`,
+                url: `${API_ENDPOINT}/departments/${id}`,
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("access_token")}`,
                 },
@@ -97,34 +98,33 @@ export const fetchSpeciality = createAsyncThunk(
     }
 );
 
-// Login Slice
-const Speciality = createSlice({
-    name: "Speciality",
+const Department = createSlice({
+    name: "Department",
     initialState: {
-        specialities: [],
-        speciality: null,
+        departments: [],
+        department: null,
         loading: false,
     },
     extraReducers: {
-        [fetchAllSpecialities.fulfilled]: (state, action) => {
-            state.specialities = action.payload;
+        [fetchAllDepartments.fulfilled]: (state, action) => {
+            state.departments = action.payload;
             state.loading = false;
         },
-        [fetchAllSpecialities.pending]: (state) => {
+        [fetchAllDepartments.pending]: (state) => {
             state.loading = true;
         },
-        [fetchSpeciality.fulfilled]: (state, action) => {
-            state.speciality = action.payload;
+        [fetchDepartment.fulfilled]: (state, action) => {
+            state.department = action.payload;
             state.loading = false;
         },
-        [fetchSpeciality.pending]: (state) => {
+        [fetchDepartment.pending]: (state) => {
             state.loading = true;
         },
     },
 });
 
-export default Speciality.reducer;
+export default Department.reducer;
 
 // Selectors
-export const selectAllSpecialities = (state) => state.Speciality.specialities;
-export const selectSpeciality = (state) => state.Speciality.speciality;
+export const selectAllDepartments = (state) => state.Department.departments;
+export const selectDepartment = (state) => state.Department.department;

@@ -14,18 +14,19 @@ import {
   selectAllUser,
 } from "../../../reducers/User.slice";
 import {
-  createSubject,
   fetchAllSpecialities,
   fetchDepartments,
   selectAllSpecialities,
   selectDepartments,
 } from "../../../reducers/Speciality.slice";
 import { Group } from "../../../common/constants";
+import { fetchLevels, selectLevels } from "../../../reducers/Level.slice";
+import { selectAllGroups, selectGroups } from "../../../reducers/Group.slice";
 import {
-  fetchLevels,
-  selectGroups,
-  selectLevels,
-} from "../../../reducers/Level.slice";
+  fetchAllDepartments,
+  selectAllDepartments,
+} from "../../../reducers/Department.slice";
+import { createSubject } from "../../../reducers/Subject.slice";
 
 function CreateCourse({ onChange, onlyFormItems, record }) {
   const [showModal, setShowModal] = useState(false);
@@ -33,13 +34,13 @@ function CreateCourse({ onChange, onlyFormItems, record }) {
   const dispatch = useDispatch();
 
   const users = useSelector(selectAllUser);
-  const departments = useSelector(selectDepartments);
-  const groups = useSelector(selectGroups);
+  const departments = useSelector(selectAllDepartments);
+  const groups = useSelector(selectAllGroups);
 
   const teatchers = users.filter((us) => us.isInstructor);
 
   useEffect(() => {
-    dispatch(fetchDepartments());
+    dispatch(fetchAllDepartments());
     dispatch(fetchAllUsers());
   }, []);
 

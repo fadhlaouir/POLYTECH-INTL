@@ -18,26 +18,35 @@ import {
   selectDepartments,
 } from "../../../reducers/Speciality.slice";
 import {
-  fetchGroups,
+  fetchAlllevels,
   fetchLevels,
-  selectGroups,
+  selectAlllevels,
   selectLevels,
 } from "../../../reducers/Level.slice";
+import {
+  fetchAllGroups,
+  selectAllGroups,
+  selectGroups,
+} from "../../../reducers/Group.slice";
+import {
+  fetchAllDepartments,
+  selectAllDepartments,
+} from "../../../reducers/Department.slice";
 
 function UpdateStudents({ onChange, onlyFormItems, record }) {
   const [showModal, setShowModal] = useState(false);
   const dispatch = useDispatch();
 
-  const levels = useSelector(selectLevels);
-  const departments = useSelector(selectDepartments);
-  const groups = useSelector(selectGroups);
+  const levels = useSelector(selectAlllevels);
+  const departments = useSelector(selectAllDepartments);
+  const groups = useSelector(selectAllGroups);
 
   useEffect(() => {
     dispatch(fetchAllSpecialities());
-    dispatch(fetchDepartments());
+    dispatch(fetchAllDepartments());
     dispatch(fetchAllUsers());
-    dispatch(fetchGroups());
-    dispatch(fetchLevels());
+    dispatch(fetchAllGroups());
+    dispatch(fetchAlllevels());
   }, []);
 
   const onClickSubmit = (entry) => {

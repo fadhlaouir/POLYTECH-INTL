@@ -18,17 +18,21 @@ import {
   selectAllSpecialities,
   selectDepartments,
 } from "../../../reducers/Speciality.slice";
+import {
+  fetchAllDepartments,
+  selectAllDepartments,
+} from "../../../reducers/Department.slice";
 
 function UpdateTeatcher({ onChange, onlyFormItems, record }) {
   const [showModal, setShowModal] = useState(false);
   const dispatch = useDispatch();
 
   const specialities = useSelector(selectAllSpecialities);
-  const departments = useSelector(selectDepartments);
+  const departments = useSelector(selectAllDepartments);
 
   useEffect(() => {
     dispatch(fetchAllSpecialities());
-    dispatch(fetchDepartments());
+    dispatch(fetchAllDepartments());
     dispatch(fetchAllUsers());
   }, []);
 

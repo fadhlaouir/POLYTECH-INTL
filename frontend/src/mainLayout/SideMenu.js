@@ -6,6 +6,7 @@ import { Layout, Menu } from "antd";
 import "./TopBar.css";
 import { useSelector } from "react-redux";
 import { selectDepartments } from "../reducers/Speciality.slice";
+import { selectAllDepartments } from "../reducers/Department.slice";
 
 /* -------------------------------------------------------------------------- */
 /*                                  Side Menu                                 */
@@ -15,7 +16,7 @@ function SideMenu() {
   const { Sider } = Layout;
   const { SubMenu } = Menu;
 
-  const departments = useSelector(selectDepartments);
+  const departments = useSelector(selectAllDepartments);
 
   /* -------------------------------- RENDERING ------------------------------- */
   return (
@@ -29,6 +30,12 @@ function SideMenu() {
         </Menu.Item>
         <Menu.Item key="3">
           <Link to="/students">All Students</Link>
+        </Menu.Item>
+        <Menu.Item key="4">
+          <Link to="/courses">Courses</Link>
+        </Menu.Item>
+        <Menu.Item key="5">
+          <Link to="/rooms">Rooms</Link>
         </Menu.Item>
         <SubMenu key="sub1" title="Department">
           {departments?.map((dp) => (
@@ -62,11 +69,8 @@ function SideMenu() {
             </SubMenu>
           ))}
         </SubMenu>
-        <Menu.Item key="4">
+        <Menu.Item key="6">
           <Link to="/calendar">Calendar</Link>
-        </Menu.Item>
-        <Menu.Item key="5">
-          <Link to="/courses">Courses</Link>
         </Menu.Item>
       </Menu>
     </Sider>

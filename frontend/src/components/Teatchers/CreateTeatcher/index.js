@@ -15,20 +15,22 @@ import {
 } from "../../../reducers/User.slice";
 import {
   fetchAllSpecialities,
-  fetchDepartments,
   selectAllSpecialities,
-  selectDepartments,
 } from "../../../reducers/Speciality.slice";
+import {
+  fetchAllDepartments,
+  selectAllDepartments,
+} from "../../../reducers/Department.slice";
 
 function CreateTeatcher({ onChange, onlyFormItems, record }) {
   const [showModal, setShowModal] = useState(false);
   const dispatch = useDispatch();
   const specialities = useSelector(selectAllSpecialities);
-  const departments = useSelector(selectDepartments);
+  const departments = useSelector(selectAllDepartments);
   console.log("departments", departments);
   useEffect(() => {
     dispatch(fetchAllSpecialities());
-    dispatch(fetchDepartments());
+    dispatch(fetchAllDepartments());
     dispatch(fetchAllUsers());
   }, []);
 
