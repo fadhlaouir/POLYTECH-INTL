@@ -1,51 +1,45 @@
-import { Table, Row, Col, Button, Modal, notification, Tag } from "antd";
-import { useEffect } from "react";
-import { ExclamationCircleOutlined } from "@ant-design/icons";
-import { unwrapResult } from "@reduxjs/toolkit";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { unwrapResult } from "@reduxjs/toolkit";
+
+import { Table, Row, Col, Button, Modal, notification } from "antd";
+import { ExclamationCircleOutlined } from "@ant-design/icons";
 
 import {
-  deleteUser,
-  fetchAllUsers,
-  selectAllUser,
-} from "../../reducers/User.slice";
-import UpdateTeatcher from "../../components/Teatchers/UpdateTeatchers";
-import CreateTeatcher from "../../components/Teatchers/CreateTeatcher";
-
+  deleteCourse,
+  fetchAllCourses,
+  selectAllCourses,
+} from "../../reducers/Course.slice";
 import CreateCourse from "../../components/Courses/CreateCourse";
 import UpdateCourse from "../../components/Courses/UpdateCourse";
-import {
-  fetchAllSubjects,
-  selectAllSubjects,
-} from "../../reducers/Subject.slice";
 
-function Courses({ location }) {
+function Courses() {
   const { confirm } = Modal;
   const dispatch = useDispatch();
 
-  const subjects = useSelector(selectAllSubjects);
+  const courses = useSelector(selectAllCourses);
 
   useEffect(() => {
-    dispatch(fetchAllSubjects());
+    dispatch(fetchAllCourses());
   }, []);
 
-  const removeTeatcher = (data) => {
+  const removeCourse = (data) => {
     confirm({
       title: "Are you sure ?",
       icon: <ExclamationCircleOutlined />,
       onOk() {
-        dispatch(deleteUser(data.id))
+        dispatch(deleteCourse(data.id))
           .then(unwrapResult)
           .then(() => {
             notification.success({
-              message: "Delete Instructor",
-              description: "Instructor was Deleted successfully",
+              message: "Delete Course",
+              description: "Course was Deleted successfully",
             });
-            dispatch(fetchAllUsers());
+            dispatch(fetchAllCourses());
           })
           .catch(() =>
             notification.error({
-              message: "Delete Instructor",
+              message: "Delete Course",
               description: "An error occured",
             })
           );
@@ -53,7 +47,7 @@ function Courses({ location }) {
     });
   };
 
-  const teatcher = subjects?.map((s) => ({
+  const teatcher = courses?.map((s) => ({
     id: s.id,
     name: s.name,
     department: s.departments.map((dp) => dp?.name).join(" , "),
@@ -61,8 +55,8 @@ function Courses({ location }) {
     teatcher: s.users.filter((us) => us.isInstructor).map((us) => us.username),
     // availibilty: b.availibilty,
   }));
-  console.log("subjects", subjects);
-  const TEATCHER_COLUMN = [
+
+  const COURSE_COLUMN = [
     {
       title: "Course Name",
       key: "name",
@@ -90,11 +84,7 @@ function Courses({ location }) {
             <UpdateCourse record={record} />
           </Col>
           <Col>
-            <Button
-              type="primary"
-              onClick={() => removeTeatcher(record)}
-              danger
-            >
+            <Button type="primary" onClick={() => removeCourse(record)} danger>
               Remove
             </Button>
           </Col>
@@ -107,7 +97,7 @@ function Courses({ location }) {
     <div>
       <h1>Courses</h1>
       <CreateCourse />
-      <Table columns={TEATCHER_COLUMN} dataSource={teatcher} />
+      <Table columns={COURSE_COLUMN} dataSource={teatcher} />
     </div>
   );
 }

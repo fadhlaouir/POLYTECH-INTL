@@ -6,7 +6,7 @@ import Level from "../reducers/Level.slice";
 import Room from "../reducers/Room.slice";
 import Session from "../reducers/Session.slice";
 import Speciality from "../reducers/Speciality.slice";
-import Subject from "../reducers/Subject.slice";
+import Course from "../reducers/Course.slice";
 import User from "../reducers/User.slice";
 
 export default combineReducers({
@@ -16,6 +16,6 @@ export default combineReducers({
     Room,
     Session,
     Speciality,
-    Subject,
+    Course,
     User,
 });

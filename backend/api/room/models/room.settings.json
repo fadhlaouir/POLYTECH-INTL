@@ -24,16 +24,16 @@
       "model": "department",
       "via": "room"
     },
-    "subjects": {
-      "collection": "subject",
-      "via": "room"
-    },
     "groups": {
       "collection": "group",
       "via": "rooms"
     },
     "name": {
       "type": "string"
+    },
+    "courses": {
+      "via": "rooms",
+      "collection": "course"
     }
   }
 }

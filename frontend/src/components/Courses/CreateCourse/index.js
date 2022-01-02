@@ -6,27 +6,12 @@ import { unwrapResult } from "@reduxjs/toolkit";
 
 import { Form, Button, Modal, notification } from "antd";
 import FormBuilder from "antd-form-builder";
-
-import {
-  createUser,
-  fetchAllUsers,
-  fetchUser,
-  selectAllUser,
-} from "../../../reducers/User.slice";
-import {
-  fetchAllSpecialities,
-  fetchDepartments,
-  selectAllSpecialities,
-  selectDepartments,
-} from "../../../reducers/Speciality.slice";
-import { Group } from "../../../common/constants";
-import { fetchLevels, selectLevels } from "../../../reducers/Level.slice";
-import { selectAllGroups, selectGroups } from "../../../reducers/Group.slice";
+import { fetchAllUsers, selectAllUser } from "../../../reducers/User.slice";
 import {
   fetchAllDepartments,
   selectAllDepartments,
 } from "../../../reducers/Department.slice";
-import { createSubject } from "../../../reducers/Subject.slice";
+import { createCourse, fetchAllCourses } from "../../../reducers/Course.slice";
 
 function CreateCourse({ onChange, onlyFormItems, record }) {
   const [showModal, setShowModal] = useState(false);
@@ -35,18 +20,18 @@ function CreateCourse({ onChange, onlyFormItems, record }) {
 
   const users = useSelector(selectAllUser);
   const departments = useSelector(selectAllDepartments);
-  const groups = useSelector(selectAllGroups);
 
   const teatchers = users.filter((us) => us.isInstructor);
 
   useEffect(() => {
-    dispatch(fetchAllDepartments());
     dispatch(fetchAllUsers());
+    dispatch(fetchAllCourses());
+    dispatch(fetchAllDepartments());
   }, []);
 
   const onClickSubmit = (entry) => {
     dispatch(
-      createSubject({
+      createCourse({
         ...entry,
       })
     )
@@ -57,7 +42,7 @@ function CreateCourse({ onChange, onlyFormItems, record }) {
           description: "Created successfully",
         });
         setShowModal(!showModal);
-        dispatch(fetchAllUsers());
+        dispatch(fetchAllCourses());
       })
       .catch(() =>
         notification.error({
@@ -69,7 +54,6 @@ function CreateCourse({ onChange, onlyFormItems, record }) {
 
   const [form] = Form.useForm();
 
-  // @TODOS: add user code checker
   const FormFields = [
     {
       key: "name",
@@ -104,12 +88,6 @@ function CreateCourse({ onChange, onlyFormItems, record }) {
       label: "Course Duration",
       placeholder: "Course Duration",
       widget: "number",
-      rules: [
-        {
-          required: true,
-          message: "Course Duration is required",
-        },
-      ],
     },
     {
       key: "users",

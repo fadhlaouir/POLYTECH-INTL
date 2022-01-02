@@ -1,8 +1,8 @@
 {
   "kind": "collectionType",
-  "collectionName": "subjects",
+  "collectionName": "courses",
   "info": {
-    "name": "Subject"
+    "name": "Course"
   },
   "options": {
     "increments": true,
@@ -12,22 +12,24 @@
     "name": {
       "type": "string"
     },
+    "duration": {
+      "type": "decimal"
+    },
     "users": {
       "plugin": "users-permissions",
       "collection": "user",
-      "via": "subjects",
+      "via": "courses",
       "dominant": true
     },
-    "room": {
-      "via": "subjects",
-      "model": "room"
+    "rooms": {
+      "collection": "room",
+      "via": "courses",
+      "dominant": true
     },
     "departments": {
       "collection": "department",
-      "via": "subject"
-    },
-    "duration": {
-      "type": "integer"
+      "via": "courses",
+      "dominant": true
     }
   }
 }

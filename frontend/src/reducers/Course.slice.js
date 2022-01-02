@@ -2,13 +2,13 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { API_ENDPOINT } from "../common/config";
 
-export const fetchAllSubjects = createAsyncThunk(
-    "subject/fetchAllSubjects",
+export const fetchAllCourses = createAsyncThunk(
+    "course/fetchAllCourses",
     async(id, { rejectWithValue }) => {
         try {
             const config = {
                 method: "get",
-                url: `${API_ENDPOINT}/subjects`,
+                url: `${API_ENDPOINT}/courses`,
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("access_token")}`,
                 },
@@ -22,13 +22,13 @@ export const fetchAllSubjects = createAsyncThunk(
     }
 );
 
-export const createSubject = createAsyncThunk(
-    "subject/createSubject",
+export const createCourse = createAsyncThunk(
+    "course/createCourse",
     async(data, { rejectWithValue }) => {
         try {
             const config = {
                 method: "post",
-                url: `${API_ENDPOINT}/subjects`,
+                url: `${API_ENDPOINT}/courses`,
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("access_token")}`,
                 },
@@ -43,13 +43,13 @@ export const createSubject = createAsyncThunk(
     }
 );
 
-export const updateSubject = createAsyncThunk(
-    "subject/updateSubject",
+export const updateCourse = createAsyncThunk(
+    "course/updateCourse",
     async(data, { rejectWithValue }) => {
         try {
             const config = {
                 method: "put",
-                url: `${API_ENDPOINT}/subjects/${data.id}`,
+                url: `${API_ENDPOINT}/courses/${data.id}`,
                 data: data.fields,
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("access_token")}`,
@@ -63,13 +63,13 @@ export const updateSubject = createAsyncThunk(
     }
 );
 
-export const deleteSubject = createAsyncThunk(
-    "subject/deleteSubject",
+export const deleteCourse = createAsyncThunk(
+    "course/deleteCourse",
     async(id, { rejectWithValue }) => {
         try {
             const config = {
                 method: "delete",
-                url: `${API_ENDPOINT}/subjects/${id}`,
+                url: `${API_ENDPOINT}/courses/${id}`,
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("access_token")}`,
                 },
@@ -82,13 +82,13 @@ export const deleteSubject = createAsyncThunk(
     }
 );
 
-export const fetchSubject = createAsyncThunk(
-    "subject/fetchSubject",
+export const fetchCourse = createAsyncThunk(
+    "course/fetchCourse",
     async(id, { rejectWithValue }) => {
         try {
             const config = {
                 method: "get",
-                url: `${API_ENDPOINT}/subjects/${id}`,
+                url: `${API_ENDPOINT}/courses/${id}`,
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("access_token")}`,
                 },
@@ -102,33 +102,33 @@ export const fetchSubject = createAsyncThunk(
     }
 );
 
-const Subject = createSlice({
-    name: "Subject",
+const Course = createSlice({
+    name: "Course",
     initialState: {
-        subjects: [],
-        subject: null,
+        courses: [],
+        course: null,
         loading: false,
     },
     extraReducers: {
-        [fetchAllSubjects.fulfilled]: (state, action) => {
-            state.subjects = action.payload;
+        [fetchAllCourses.fulfilled]: (state, action) => {
+            state.courses = action.payload;
             state.loading = false;
         },
-        [fetchAllSubjects.pending]: (state) => {
+        [fetchAllCourses.pending]: (state) => {
             state.loading = true;
         },
-        [fetchSubject.fulfilled]: (state, action) => {
-            state.subject = action.payload;
+        [fetchCourse.fulfilled]: (state, action) => {
+            state.course = action.payload;
             state.loading = false;
         },
-        [fetchSubject.pending]: (state) => {
+        [fetchCourse.pending]: (state) => {
             state.loading = true;
         },
     },
 });
 
-export default Subject.reducer;
+export default Course.reducer;
 
 // Selectors
-export const selectAllSubjects = (state) => state.Subject.subjects;
-export const selectSubject = (state) => state.Subject.subject;
+export const selectAllCourses = (state) => state.Course.courses;
+export const selectCourse = (state) => state.Course.course;

@@ -7,30 +7,15 @@ import { unwrapResult } from "@reduxjs/toolkit";
 import { Form, Button, Modal, notification, Row, Col, Select } from "antd";
 import FormBuilder from "antd-form-builder";
 
-import {
-  fetchAllUsers,
-  fetchUser,
-  selectAllUser,
-  updateUSer,
-} from "../../../reducers/User.slice";
-import {
-  createSubject,
-  fetchAllSpecialities,
-  fetchDepartments,
-  selectDepartments,
-} from "../../../reducers/Speciality.slice";
-import {
-  fetchGroups,
-  fetchLevels,
-  selectAlllevels,
-  selectLevels,
-} from "../../../reducers/Level.slice";
-import { selectAllGroups, selectGroups } from "../../../reducers/Group.slice";
+import { fetchAllUsers, selectAllUser } from "../../../reducers/User.slice";
 import {
   fetchAllDepartments,
   selectAllDepartments,
 } from "../../../reducers/Department.slice";
-import { updateSubject } from "../../../reducers/Subject.slice";
+import {
+  updateCourse as updateSingleCourse,
+  fetchCourse,
+} from "../../../reducers/Course.slice";
 
 const { Option } = Select;
 
@@ -38,10 +23,8 @@ function UpdateCourse({ onChange, onlyFormItems, record }) {
   const [showModal, setShowModal] = useState(false);
   const dispatch = useDispatch();
 
-  const levels = useSelector(selectAlllevels);
   const users = useSelector(selectAllUser);
   const departments = useSelector(selectAllDepartments);
-  const groups = useSelector(selectAllGroups);
 
   const teatchers = users.filter((us) => us.isInstructor);
 
@@ -53,7 +36,7 @@ function UpdateCourse({ onChange, onlyFormItems, record }) {
   const onClickSubmit = (entry) => {
     console.log("entry", entry);
     dispatch(
-      updateSubject({
+      updateSingleCourse({
         id: record.id,
         fields: {
           ...entry,
@@ -67,7 +50,7 @@ function UpdateCourse({ onChange, onlyFormItems, record }) {
           description: "Updated successfully",
         });
         setShowModal(!showModal);
-        dispatch(fetchUser(record.id));
+        dispatch(fetchCourse(record.id));
       })
       .catch(() =>
         notification.error({
@@ -77,10 +60,6 @@ function UpdateCourse({ onChange, onlyFormItems, record }) {
       );
   };
   const [form] = Form.useForm();
-
-  function handleChange(value) {
-    console.log(`selected ${value}`);
-  }
 
   const FormFields = [
     {
@@ -116,14 +95,7 @@ function UpdateCourse({ onChange, onlyFormItems, record }) {
       key: "duration",
       label: "Course Duration",
       placeholder: "Course Duration",
-      initialValue: record?.duration,
       widget: "number",
-      rules: [
-        {
-          required: true,
-          message: "Course Duration is required",
-        },
-      ],
     },
     {
       key: "users",

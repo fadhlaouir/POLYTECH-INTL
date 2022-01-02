@@ -80,10 +80,6 @@
       "model": "level",
       "via": "users"
     },
-    "subjects": {
-      "via": "users",
-      "collection": "subject"
-    },
     "room": {
       "via": "users",
       "model": "room"
@@ -91,6 +87,10 @@
     "groupe": {
       "model": "group",
       "via": "users"
+    },
+    "courses": {
+      "via": "users",
+      "collection": "course"
     }
   }
 }

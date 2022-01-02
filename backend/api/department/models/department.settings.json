@@ -25,9 +25,9 @@
       "via": "department",
       "model": "room"
     },
-    "subject": {
+    "courses": {
       "via": "departments",
-      "model": "subject"
+      "collection": "course"
     }
   }
 }
