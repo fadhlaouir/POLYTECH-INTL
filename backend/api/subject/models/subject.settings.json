@@ -19,8 +19,8 @@
       "dominant": true
     },
     "room": {
-      "model": "room",
-      "via": "subjects"
+      "via": "subjects",
+      "model": "room"
     },
     "departments": {
       "collection": "department",

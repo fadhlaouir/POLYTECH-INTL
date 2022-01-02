@@ -16,21 +16,24 @@
       "type": "boolean"
     },
     "users": {
-      "via": "room",
       "plugin": "users-permissions",
-      "collection": "user"
+      "collection": "user",
+      "via": "room"
     },
     "department": {
       "model": "department",
       "via": "room"
     },
     "subjects": {
-      "via": "room",
-      "collection": "subject"
+      "collection": "subject",
+      "via": "room"
     },
     "groups": {
-      "via": "rooms",
-      "collection": "group"
+      "collection": "group",
+      "via": "rooms"
+    },
+    "name": {
+      "type": "string"
     }
   }
 }

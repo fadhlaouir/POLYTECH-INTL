@@ -18,8 +18,8 @@
       "collection": "user"
     },
     "rooms": {
-      "collection": "room",
       "via": "groups",
+      "collection": "room",
       "dominant": true
     }
   }

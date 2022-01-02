@@ -85,8 +85,8 @@
       "collection": "subject"
     },
     "room": {
-      "model": "room",
-      "via": "users"
+      "via": "users",
+      "model": "room"
     },
     "groupe": {
       "model": "group",

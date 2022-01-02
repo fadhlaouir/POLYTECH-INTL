@@ -4,35 +4,38 @@ import { ExclamationCircleOutlined } from "@ant-design/icons";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { useSelector, useDispatch } from "react-redux";
 
-import {
-  deleteUser,
-  fetchAllUsers,
-  selectAllUser,
-} from "../../reducers/User.slice";
-import UpdateTeatcher from "../../components/Teatchers/UpdateTeatchers";
-import CreateTeatcher from "../../components/Teatchers/CreateTeatcher";
+import CreateRoom from "../../components/Rooms/CreateRoom";
+import UpdateRoom from "../../components/Rooms/UpdateRoom";
 
-function Rooms({ location }) {
-  const Rooms = useSelector(selectAllUser);
+import {
+  deleteRoom,
+  fetchAllRooms,
+  selectAllRooms,
+} from "../../reducers/Room.slice";
+
+function Rooms() {
+  const Rooms = useSelector(selectAllRooms);
+
   const { confirm } = Modal;
   const dispatch = useDispatch();
+
   useEffect(() => {
-    dispatch(fetchAllUsers());
+    dispatch(fetchAllRooms());
   }, []);
 
-  const removeTeatcher = (data) => {
+  const removeRoom = (data) => {
     confirm({
       title: "Are you sure ?",
       icon: <ExclamationCircleOutlined />,
       onOk() {
-        dispatch(deleteUser(data.id))
+        dispatch(deleteRoom(data.id))
           .then(unwrapResult)
           .then(() => {
             notification.success({
               message: "Delete Room",
               description: "Room was Deleted successfully",
             });
-            dispatch(fetchAllUsers());
+            dispatch(fetchAllRooms());
           })
           .catch(() =>
             notification.error({
@@ -44,67 +47,37 @@ function Rooms({ location }) {
     });
   };
 
-  const teatcher = location.department
-    ? Rooms?.filter(
-        (b) =>
-          b.isInstructor &&
-          b.department.name === location.department &&
-          b.level.name === location.level
-      ).map((b) => ({
-        id: b.id,
-        username: b.username,
-        speciality: b.speciality?.name,
-        email: b.email,
-        department: b.department?.name,
-        availibilty: b.availibilty,
-      }))
-    : Rooms?.filter((b) => b.isInstructor).map((b) => ({
-        id: b.id,
-        username: b.username,
-        email: b.email,
-        speciality: b.speciality?.name,
-        department: b.department?.name,
-        availibilty: b.availibilty,
-      }));
+  const room = Rooms?.map((b) => ({
+    id: b.id,
+    name: b.name,
+    capacity: b.capacity,
+    isAvailable: b.isAvailable ? "Available" : "Not Available",
+  }));
 
-  const TEATCHER_COLUMN = [
+  const ROOM_COLUMN = [
     {
-      title: "Name",
-      key: "username",
-      dataIndex: "username",
+      title: "Room Number",
+      key: "name",
+      dataIndex: "name",
     },
     {
-      title: "Email",
-      key: "email",
-      dataIndex: "email",
+      title: "Capacity",
+      key: "capacity",
+      dataIndex: "capacity",
     },
     {
-      title: "Speciality",
-      key: "speciality",
-      dataIndex: "speciality",
-    },
-    {
-      title: "Department",
-      key: "department",
-      dataIndex: "department",
-    },
-    {
-      title: "Availibilty",
-      key: "availibilty",
-      dataIndex: "availibilty",
+      title: "Available ?",
+      key: "isAvailable",
+      dataIndex: "isAvailable",
     },
     {
       render: (record) => (
-        <Row align="middle" justify="space-between">
+        <Row align="middle">
           <Col>
-            <UpdateTeatcher record={record} />
+            <UpdateRoom record={record} />
           </Col>
-          <Col>
-            <Button
-              type="primary"
-              onClick={() => removeTeatcher(record)}
-              danger
-            >
+          <Col style={{ marginLeft: "20px" }}>
+            <Button type="primary" onClick={() => removeRoom(record)} danger>
               Remove
             </Button>
           </Col>
@@ -116,8 +89,8 @@ function Rooms({ location }) {
   return (
     <div>
       <h1>Rooms</h1>
-      <CreateTeatcher />
-      <Table columns={TEATCHER_COLUMN} dataSource={teatcher} />
+      <CreateRoom />
+      <Table columns={ROOM_COLUMN} dataSource={room} />
     </div>
   );
 }
