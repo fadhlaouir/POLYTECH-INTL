@@ -37,7 +37,10 @@ function SideMenu() {
         <Menu.Item key="5">
           <Link to="/rooms">Rooms</Link>
         </Menu.Item>
-        <SubMenu key="sub1" title="Department">
+        <Menu.Item key="6">
+          <Link to="/departments">Departments</Link>
+        </Menu.Item>
+        <SubMenu key="sub1" title="Filter By Department">
           {departments?.map((dp) => (
             <SubMenu key={dp.id} title={dp.name}>
               {dp.levels.map((level) => (
@@ -69,7 +72,7 @@ function SideMenu() {
             </SubMenu>
           ))}
         </SubMenu>
-        <Menu.Item key="6">
+        <Menu.Item key="7">
           <Link to="/calendar">Calendar</Link>
         </Menu.Item>
       </Menu>

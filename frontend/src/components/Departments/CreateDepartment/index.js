@@ -1,0 +1,111 @@
+import React, { useEffect, useState } from "react";
+import PropTypes from "prop-types";
+
+import { useDispatch, useSelector } from "react-redux";
+import { unwrapResult } from "@reduxjs/toolkit";
+
+import { Form, Button, Modal, notification } from "antd";
+import FormBuilder from "antd-form-builder";
+import { fetchAllUsers, selectAllUser } from "../../../reducers/User.slice";
+import {
+  createDepartment as createSingleDepartment,
+  fetchAllDepartments,
+  selectAllDepartments,
+} from "../../../reducers/Department.slice";
+
+function CreateDepartment({ onChange, onlyFormItems, record }) {
+  const [showModal, setShowModal] = useState(false);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchAllDepartments());
+  }, []);
+
+  const onClickSubmit = (entry) => {
+    dispatch(
+      createSingleDepartment({
+        ...entry,
+      })
+    )
+      .then(unwrapResult)
+      .then(() => {
+        notification.success({
+          message: "Department",
+          description: "Created successfully",
+        });
+        setShowModal(!showModal);
+        dispatch(fetchAllDepartments());
+      })
+      .catch(() =>
+        notification.error({
+          message: "Department",
+          description: "An error occured",
+        })
+      );
+  };
+
+  const [form] = Form.useForm();
+
+  const FormFields = [
+    {
+      key: "name",
+      label: "Department Name",
+      placeholder: "Department Name",
+      rules: [
+        {
+          required: true,
+          message: "Department Name is required",
+        },
+      ],
+    },
+  ];
+
+  /* -------------------------------- RENDERING ------------------------------- */
+  return (
+    <div>
+      <Button
+        type="primary"
+        style={{ marginBottom: "20px" }}
+        onClick={() => setShowModal(!showModal)}
+      >
+        Create Department
+      </Button>
+      <Modal
+        style={{ minHeight: "1500px !important" }}
+        title="Create"
+        width={1000}
+        visible={showModal}
+        maskClosable={false}
+        footer={null}
+        closable
+        destroyOnClose
+        onCancel={() => setShowModal(!showModal)}
+      >
+        <Form
+          layout="horizontal"
+          onFinish={(values) => onClickSubmit(values)}
+          onValuesChange={onChange}
+          form={form}
+        >
+          <FormBuilder form={form} meta={FormFields} />
+          {!onlyFormItems && (
+            <Form.Item wrapperCol={{ span: 16, offset: 8 }}>
+              <Button htmlType="submit" type="primary">
+                Submit
+              </Button>
+            </Form.Item>
+          )}
+        </Form>
+      </Modal>
+    </div>
+  );
+}
+
+CreateDepartment.propTypes = {
+  record: PropTypes.object,
+  onChange: PropTypes.func,
+  onlyFormItems: PropTypes.bool,
+};
+
+export default CreateDepartment;
