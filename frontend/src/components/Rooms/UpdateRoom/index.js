@@ -75,6 +75,19 @@ function UpdateRoom({ onChange, onlyFormItems, record }) {
         },
       ],
     },
+    {
+      key: "isAvailable",
+      label: "isAvailable",
+      placeholder: "isAvailable",
+      initialValue: record?.isAvailable,
+      widget: "switch",
+      rules: [
+        {
+          required: true,
+          message: "isAvailable is required",
+        },
+      ],
+    },
   ];
 
   /* -------------------------------- RENDERING ------------------------------- */

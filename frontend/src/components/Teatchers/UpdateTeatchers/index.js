@@ -22,6 +22,11 @@ import {
   fetchAllDepartments,
   selectAllDepartments,
 } from "../../../reducers/Department.slice";
+import { fetchAllGroups, selectAllGroups } from "../../../reducers/Group.slice";
+import {
+  fetchAllCourses,
+  selectAllCourses,
+} from "../../../reducers/Course.slice";
 
 function UpdateTeatcher({ onChange, onlyFormItems, record }) {
   const [showModal, setShowModal] = useState(false);
@@ -29,11 +34,15 @@ function UpdateTeatcher({ onChange, onlyFormItems, record }) {
 
   const specialities = useSelector(selectAllSpecialities);
   const departments = useSelector(selectAllDepartments);
+  const groups = useSelector(selectAllGroups);
+  const courses = useSelector(selectAllCourses);
 
   useEffect(() => {
     dispatch(fetchAllSpecialities());
     dispatch(fetchAllDepartments());
     dispatch(fetchAllUsers());
+    dispatch(fetchAllGroups());
+    dispatch(fetchAllCourses());
   }, []);
 
   const onClickSubmit = (entry) => {
@@ -121,6 +130,38 @@ function UpdateTeatcher({ onChange, onlyFormItems, record }) {
         {
           required: true,
           message: "departments is required",
+        },
+      ],
+    },
+    {
+      key: "groupes",
+      label: "groupes",
+      placeholder: "groupes",
+      widget: "select",
+      options: groups?.map((item) => ({
+        label: item.name,
+        value: item.id,
+      })),
+      rules: [
+        {
+          required: true,
+          message: "groupes is required",
+        },
+      ],
+    },
+    {
+      key: "courses",
+      label: "courses",
+      placeholder: "courses",
+      widget: "select",
+      options: courses?.map((item) => ({
+        label: item.name,
+        value: item.id,
+      })),
+      rules: [
+        {
+          required: true,
+          message: "courses is required",
         },
       ],
     },

@@ -28,6 +28,10 @@
     "courses": {
       "via": "departments",
       "collection": "course"
+    },
+    "groups": {
+      "via": "department",
+      "collection": "group"
     }
   }
 }

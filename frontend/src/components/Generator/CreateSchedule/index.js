@@ -8,121 +8,96 @@ import { Form, Button, Modal, notification } from "antd";
 import FormBuilder from "antd-form-builder";
 
 import {
+  createUser,
   fetchAllUsers,
   fetchUser,
-  updateUSer,
 } from "../../../reducers/User.slice";
 import {
   fetchAllSpecialities,
   fetchDepartments,
+  selectAllSpecialities,
   selectDepartments,
 } from "../../../reducers/Speciality.slice";
+import { Group } from "../../../common/constants";
 import {
   fetchAlllevels,
   fetchLevels,
   selectAlllevels,
   selectLevels,
 } from "../../../reducers/Level.slice";
-import {
-  fetchAllGroups,
-  selectAllGroups,
-  selectGroups,
-} from "../../../reducers/Group.slice";
+import { fetchAllGroups, selectAllGroups } from "../../../reducers/Group.slice";
 import {
   fetchAllDepartments,
   selectAllDepartments,
 } from "../../../reducers/Department.slice";
+import { fetchAllRooms, selectAllRooms } from "../../../reducers/Room.slice";
 
-function UpdateStudents({ onChange, onlyFormItems, record }) {
+function CreateSchedule({ onChange, onlyFormItems, record }) {
   const [showModal, setShowModal] = useState(false);
+
   const dispatch = useDispatch();
 
-  const levels = useSelector(selectAlllevels);
   const departments = useSelector(selectAllDepartments);
   const groups = useSelector(selectAllGroups);
+  const rooms = useSelector(selectAllRooms);
 
   useEffect(() => {
     dispatch(fetchAllSpecialities());
-    dispatch(fetchAllDepartments());
-    dispatch(fetchAllUsers());
     dispatch(fetchAllGroups());
     dispatch(fetchAlllevels());
+    dispatch(fetchAllDepartments());
+    dispatch(fetchAllRooms());
+    dispatch(fetchAllUsers());
   }, []);
 
   const onClickSubmit = (entry) => {
+    // dispatch(
+    //   createUser({
+    //     ...entry,
+    //     isStudent: true,
+    //   })
+    // )
+    //   .then(unwrapResult)
+    //   .then(() => {
+    //     notification.success({
+    //       message: "Student",
+    //       description: "Created successfully",
+    //     });
+    //     setShowModal(!showModal);
+    //     dispatch(fetchAllUsers());
+    //   })
+    //   .catch(() =>
+    //     notification.error({
+    //       message: "Student",
+    //       description: "An error occured",
+    //     })
+    //   );
     console.log("entry", entry);
-    dispatch(
-      updateUSer({
-        id: record.id,
-        fields: {
-          ...entry,
-        },
-      })
-    )
-      .then(unwrapResult)
-      .then(() => {
-        notification.success({
-          message: "Instructor",
-          description: "Updated successfully",
-        });
-        setShowModal(!showModal);
-        dispatch(fetchUser(record.id));
-      })
-      .catch(() =>
-        notification.error({
-          message: "Instructor",
-          description: "An error occured",
-        })
-      );
   };
-  const [form] = Form.useForm();
 
+  const [form] = Form.useForm();
   // Get Level by selected departments
   const getDepartmentSelectedField = form.getFieldValue("department");
   const levelBySelectedDepartment = departments.find(
     (dep) => dep.id === getDepartmentSelectedField
   );
-
   // Get Group by selected levels
   const getLevelSelectedField = form.getFieldValue("level");
-  const getGoupBySelectedLevel = groups.filter(
+  const getGoupByLevel = groups.filter(
     (gr) =>
       gr.level.id === getLevelSelectedField &&
       gr.department?.id === getDepartmentSelectedField
   );
 
-  console.log("record", record);
+  // get selected room
+  const getSelectedRoom = form.getFieldValue("room");
+  const getRoomById = rooms.find((room) => room.id === getSelectedRoom);
 
   const FormFields = [
     {
-      key: "username",
-      label: "username",
-      placeholder: "username",
-      initialValue: record?.username,
-      rules: [
-        {
-          required: true,
-          message: "username is required",
-        },
-      ],
-    },
-    {
-      key: "email",
-      label: "Email",
-      placeholder: "email",
-      initialValue: record?.email,
-      disabled: true,
-      rules: [
-        {
-          required: true,
-          message: "email is required",
-        },
-      ],
-    },
-    {
       key: "department",
       label: "departments",
-      placeholder: "departments",
+      placeholder: "Select Department",
       widget: "select",
       initialValue: record?.department,
       options: departments?.map((item) => ({
@@ -132,16 +107,15 @@ function UpdateStudents({ onChange, onlyFormItems, record }) {
       rules: [
         {
           required: true,
-          message: "departments is required",
+          message: "department is required",
         },
       ],
     },
     {
       key: "level",
       label: "level",
-      placeholder: "level",
+      placeholder: "Select level",
       widget: "select",
-      initialValue: record?.level,
       options: levelBySelectedDepartment?.levels.map((item) => ({
         label: item.name,
         value: item.id,
@@ -154,12 +128,11 @@ function UpdateStudents({ onChange, onlyFormItems, record }) {
       ],
     },
     {
-      key: "groupes",
+      key: "groupe",
       label: "Group",
-      placeholder: "Group",
-
+      placeholder: "Select Group",
       widget: "select",
-      options: getGoupBySelectedLevel?.map((item) => ({
+      options: getGoupByLevel?.map((item) => ({
         label: item.name,
         value: item.id,
       })),
@@ -170,20 +143,42 @@ function UpdateStudents({ onChange, onlyFormItems, record }) {
         },
       ],
     },
+    {
+      key: "room",
+      label: "Room",
+      placeholder: "Select Room",
+      widget: "select",
+      options: rooms
+        ?.filter((r) => r.isAvailable !== false)
+        .map((item) => ({
+          label: item.name,
+          value: item.id,
+        })),
+      rules: [
+        {
+          required: true,
+          message: "Room is required",
+        },
+      ],
+      extra: `Maximum students capacity is ${getRoomById?.capacity}`,
+    },
   ];
 
   // force update form
   const forceUpdate = FormBuilder.useForceUpdate();
-
   /* -------------------------------- RENDERING ------------------------------- */
   return (
     <div>
-      <Button type="primary" onClick={() => setShowModal(!showModal)}>
-        Edit
+      <Button
+        type="primary"
+        style={{ marginBottom: "20px" }}
+        onClick={() => setShowModal(!showModal)}
+      >
+        Add Extra Lecture Manualy
       </Button>
       <Modal
         style={{ minHeight: "1500px !important" }}
-        title="Update"
+        title="Create"
         width={1000}
         visible={showModal}
         maskClosable={false}
@@ -194,7 +189,7 @@ function UpdateStudents({ onChange, onlyFormItems, record }) {
       >
         <Form
           layout="horizontal"
-          onFinish={onClickSubmit}
+          onFinish={(values) => onClickSubmit(values)}
           onValuesChange={forceUpdate}
           form={form}
         >
@@ -212,10 +207,10 @@ function UpdateStudents({ onChange, onlyFormItems, record }) {
   );
 }
 
-UpdateStudents.propTypes = {
+CreateSchedule.propTypes = {
   record: PropTypes.object,
   onChange: PropTypes.func,
   onlyFormItems: PropTypes.bool,
 };
 
-export default UpdateStudents;
+export default CreateSchedule;

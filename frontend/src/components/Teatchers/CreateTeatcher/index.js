@@ -21,17 +21,26 @@ import {
   fetchAllDepartments,
   selectAllDepartments,
 } from "../../../reducers/Department.slice";
+import { fetchAllGroups, selectAllGroups } from "../../../reducers/Group.slice";
+import {
+  fetchAllCourses,
+  selectAllCourses,
+} from "../../../reducers/Course.slice";
 
 function CreateTeatcher({ onChange, onlyFormItems, record }) {
   const [showModal, setShowModal] = useState(false);
   const dispatch = useDispatch();
   const specialities = useSelector(selectAllSpecialities);
   const departments = useSelector(selectAllDepartments);
-  console.log("departments", departments);
+  const groups = useSelector(selectAllGroups);
+  const courses = useSelector(selectAllCourses);
+
   useEffect(() => {
     dispatch(fetchAllSpecialities());
     dispatch(fetchAllDepartments());
     dispatch(fetchAllUsers());
+    dispatch(fetchAllGroups());
+    dispatch(fetchAllCourses());
   }, []);
 
   const onClickSubmit = (entry) => {
@@ -128,6 +137,38 @@ function CreateTeatcher({ onChange, onlyFormItems, record }) {
         },
       ],
     },
+    {
+      key: "groupes",
+      label: "groupes",
+      placeholder: "groupes",
+      widget: "select",
+      options: groups?.map((item) => ({
+        label: item.name,
+        value: item.id,
+      })),
+      rules: [
+        {
+          required: true,
+          message: "groupes is required",
+        },
+      ],
+    },
+    {
+      key: "courses",
+      label: "courses",
+      placeholder: "courses",
+      widget: "select",
+      options: courses?.map((item) => ({
+        label: item.name,
+        value: item.id,
+      })),
+      rules: [
+        {
+          required: true,
+          message: "courses is required",
+        },
+      ],
+    },
   ];
 
   /* -------------------------------- RENDERING ------------------------------- */
@@ -142,7 +183,7 @@ function CreateTeatcher({ onChange, onlyFormItems, record }) {
       </Button>
       <Modal
         style={{ minHeight: "1500px !important" }}
-        title="Create"
+        title="Create Teatcher"
         width={1000}
         visible={showModal}
         maskClosable={false}

@@ -77,20 +77,20 @@
       "type": "integer"
     },
     "level": {
-      "model": "level",
-      "via": "users"
+      "via": "users",
+      "model": "level"
     },
     "room": {
       "via": "users",
       "model": "room"
     },
-    "groupe": {
-      "model": "group",
-      "via": "users"
-    },
     "courses": {
       "via": "users",
       "collection": "course"
+    },
+    "groupes": {
+      "via": "users",
+      "collection": "group"
     }
   }
 }

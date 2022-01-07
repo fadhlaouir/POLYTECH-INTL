@@ -58,7 +58,8 @@ function Teatchers({ location }) {
           speciality: b.speciality?.name,
           email: b.email,
           department: b.department?.name,
-          availibilty: b.availibilty,
+          cours: b.courses?.map((course) => course.name).join(", "),
+          groupes: b.groupes?.map((course) => course.name).join(", "),
         }))
     : teatchers
         ?.filter((b) => b.isInstructor)
@@ -68,7 +69,8 @@ function Teatchers({ location }) {
           email: b.email,
           speciality: b.speciality?.name,
           department: b.department?.name,
-          availibilty: b.availibilty,
+          cours: b.courses?.map((course) => course.name).join(", "),
+          groupes: b.groupes?.map((group) => group.name).join(", "),
         }));
 
   const TEATCHER_COLUMN = [
@@ -93,9 +95,14 @@ function Teatchers({ location }) {
       dataIndex: "department",
     },
     {
-      title: "Availibilty",
-      key: "availibilty",
-      dataIndex: "availibilty",
+      title: "Courses",
+      key: "cours",
+      dataIndex: "cours",
+    },
+    {
+      title: "Groupes",
+      key: "groupes",
+      dataIndex: "groupes",
     },
     {
       render: (record) => (

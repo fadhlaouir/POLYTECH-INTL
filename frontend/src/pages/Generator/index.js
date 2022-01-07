@@ -1,16 +1,18 @@
 import React from "react";
 import Timetable from "react-timetable-events";
+import CreateSchedule from "../../components/Generator/CreateSchedule";
+
 import "./index.css";
 
-function Calendar() {
+function Generator() {
   const IRM = {
     monday: [
       {
         id: 1,
-        name: "Custom Event 1",
+        name: "DataBase",
         type: "custom",
-        startTime: new Date("2018-02-23T11:30:00"),
-        endTime: new Date("2018-02-23T13:30:00"),
+        startTime: new Date("2022-01-07T08:30:00"),
+        endTime: new Date("2022-01-07T10:00:00"),
       },
     ],
     tuesday: [],
@@ -20,8 +22,9 @@ function Calendar() {
     saturday: [],
   };
   return (
-    <div>
-      <h1>Calendar</h1>
+    <div className="generator">
+      <h1>Generate Schedule</h1>
+      <CreateSchedule />
 
       <Timetable
         events={IRM}
@@ -34,4 +37,4 @@ function Calendar() {
   );
 }
 
-export default Calendar;
+export default Generator;

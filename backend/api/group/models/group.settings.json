@@ -13,14 +13,23 @@
       "type": "string"
     },
     "users": {
-      "via": "groupe",
       "plugin": "users-permissions",
-      "collection": "user"
+      "collection": "user",
+      "via": "groupes",
+      "dominant": true
     },
     "rooms": {
-      "via": "groups",
       "collection": "room",
+      "via": "groups",
       "dominant": true
+    },
+    "level": {
+      "model": "level",
+      "via": "groups"
+    },
+    "department": {
+      "model": "department",
+      "via": "groups"
     }
   }
 }

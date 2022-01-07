@@ -24,6 +24,7 @@ function CreateRoom({ onChange, onlyFormItems }) {
     dispatch(
       createSingleRoom({
         ...entry,
+        isAvailable: true,
       })
     )
       .then(unwrapResult)

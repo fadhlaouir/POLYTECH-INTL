@@ -25,7 +25,11 @@ import {
   selectAlllevels,
   selectLevels,
 } from "../../../reducers/Level.slice";
-import { selectAllGroups, selectGroups } from "../../../reducers/Group.slice";
+import {
+  fetchAllGroups,
+  selectAllGroups,
+  selectGroups,
+} from "../../../reducers/Group.slice";
 import {
   fetchAllDepartments,
   selectAllDepartments,
@@ -36,15 +40,13 @@ function CreateStudent({ onChange, onlyFormItems, record }) {
 
   const dispatch = useDispatch();
 
-  const levels = useSelector(selectAlllevels);
   const departments = useSelector(selectAllDepartments);
   const groups = useSelector(selectAllGroups);
 
-  console.log("levels", levels);
-
   useEffect(() => {
-    dispatch(fetchAlllevels());
     dispatch(fetchAllSpecialities());
+    dispatch(fetchAllGroups());
+    dispatch(fetchAlllevels());
     dispatch(fetchAllDepartments());
     dispatch(fetchAllUsers());
   }, []);
@@ -75,7 +77,20 @@ function CreateStudent({ onChange, onlyFormItems, record }) {
 
   const [form] = Form.useForm();
 
-  // @TODOS: add user code checker
+  // Get Level by selected departments
+  const getDepartmentSelectedField = form.getFieldValue("department");
+  const levelBySelectedDepartment = departments.find(
+    (dep) => dep.id === getDepartmentSelectedField
+  );
+
+  // Get Group by selected levels
+  const getLevelSelectedField = form.getFieldValue("level");
+  const getGoupBySelectedLevelAndDepartment = groups.filter(
+    (gr) =>
+      gr.level?.id === getLevelSelectedField &&
+      gr.department?.id === getDepartmentSelectedField
+  );
+
   const FormFields = [
     {
       key: "code",
@@ -145,7 +160,7 @@ function CreateStudent({ onChange, onlyFormItems, record }) {
       label: "level",
       placeholder: "level",
       widget: "select",
-      options: levels?.map((item) => ({
+      options: levelBySelectedDepartment?.levels.map((item) => ({
         label: item.name,
         value: item.id,
       })),
@@ -157,11 +172,11 @@ function CreateStudent({ onChange, onlyFormItems, record }) {
       ],
     },
     {
-      key: "groupe",
+      key: "groupes",
       label: "Group",
       placeholder: "Group",
       widget: "select",
-      options: groups?.map((item) => ({
+      options: getGoupBySelectedLevelAndDepartment?.map((item) => ({
         label: item.name,
         value: item.id,
       })),
@@ -173,6 +188,9 @@ function CreateStudent({ onChange, onlyFormItems, record }) {
       ],
     },
   ];
+
+  // force update form
+  const forceUpdate = FormBuilder.useForceUpdate();
 
   /* -------------------------------- RENDERING ------------------------------- */
   return (
@@ -198,7 +216,7 @@ function CreateStudent({ onChange, onlyFormItems, record }) {
         <Form
           layout="horizontal"
           onFinish={(values) => onClickSubmit(values)}
-          onValuesChange={onChange}
+          onValuesChange={forceUpdate}
           form={form}
         >
           <FormBuilder form={form} meta={FormFields} />

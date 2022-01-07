@@ -12,12 +12,14 @@ import {
 } from "../../reducers/Course.slice";
 import CreateCourse from "../../components/Courses/CreateCourse";
 import UpdateCourse from "../../components/Courses/UpdateCourse";
+import { selectSessionUser } from "../../reducers/Session.slice";
 
 function Courses() {
   const { confirm } = Modal;
   const dispatch = useDispatch();
 
   const courses = useSelector(selectAllCourses);
+  const user = useSelector(selectSessionUser);
 
   useEffect(() => {
     dispatch(fetchAllCourses());
@@ -78,25 +80,30 @@ function Courses() {
       dataIndex: "teatcher",
     },
     {
-      render: (record) => (
-        <Row align="middle" justify="space-between">
-          <Col>
-            <UpdateCourse record={record} />
-          </Col>
-          <Col>
-            <Button type="primary" onClick={() => removeCourse(record)} danger>
-              Remove
-            </Button>
-          </Col>
-        </Row>
-      ),
+      render: (record) =>
+        user.isAdmin && (
+          <Row align="middle" justify="space-between">
+            <Col>
+              <UpdateCourse record={record} />
+            </Col>
+            <Col>
+              <Button
+                type="primary"
+                onClick={() => removeCourse(record)}
+                danger
+              >
+                Remove
+              </Button>
+            </Col>
+          </Row>
+        ),
     },
   ];
 
   return (
     <div>
       <h1>Courses</h1>
-      <CreateCourse />
+      {user.isAdmin && <CreateCourse />}
       <Table columns={COURSE_COLUMN} dataSource={teatcher} />
     </div>
   );

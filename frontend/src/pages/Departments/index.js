@@ -56,6 +56,10 @@ function Departments() {
 
   const department = departments?.map((s) => ({
     id: s.id,
+    levels: s.levels
+      ?.map((le) => le.name)
+      // .sort()
+      .join(" , "),
     name: s.name,
   }));
 
@@ -64,6 +68,11 @@ function Departments() {
       title: "Department",
       key: "name",
       dataIndex: "name",
+    },
+    {
+      title: "Levels",
+      key: "levels",
+      dataIndex: "levels",
     },
     {
       render: (record) => (

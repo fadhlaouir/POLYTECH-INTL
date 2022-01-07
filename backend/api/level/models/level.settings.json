@@ -18,9 +18,13 @@
       "dominant": true
     },
     "users": {
-      "via": "level",
       "plugin": "users-permissions",
-      "collection": "user"
+      "collection": "user",
+      "via": "level"
+    },
+    "groups": {
+      "via": "level",
+      "collection": "group"
     }
   }
 }

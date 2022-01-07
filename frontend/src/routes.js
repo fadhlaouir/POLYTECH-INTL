@@ -12,6 +12,7 @@ import CalendarView from "./pages/Calendar";
 import Courses from "./pages/Courses";
 import Dashboard from "./pages/Dashboard";
 import Departments from "./pages/Departments";
+import Generator from "./pages/Generator";
 import LoginPage from "./pages/LoginPage";
 import Rooms from "./pages/Rooms";
 import NotFoundPage from "./pages/shared/NotFoundPage";
@@ -54,6 +55,7 @@ export const renderRoutes = () => (
       <LayoutRoute exact path="/students" component={Students} layout={App} />
       <LayoutRoute exact path="/courses" component={Courses} layout={App} />
       <LayoutRoute exact path="/rooms" component={Rooms} layout={App} />
+      <LayoutRoute exact path="/generator" component={Generator} layout={App} />
       <LayoutRoute
         exact
         path="/departments"

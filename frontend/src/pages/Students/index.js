@@ -61,7 +61,7 @@ function Students({ location }) {
         email: b.email,
         department: b.department.name,
         level: b.level.name,
-        group: b.groupe?.name,
+        group: b.groupes?.map((gr) => gr.name),
       }))
     : Students?.filter((b) => b.isStudent).map((b) => ({
         id: b.id,
@@ -70,9 +70,13 @@ function Students({ location }) {
         email: b.email,
         department: b.department.name,
         level: b.level.name,
-        group: b.groupe?.name,
+        group: b.groupes?.map((gr) => gr.name),
       }));
 
+  console.log(
+    "Students",
+    Students.filter((s) => s.isStudent)
+  );
   const STUDENT_COLUMN = [
     {
       title: "Code",

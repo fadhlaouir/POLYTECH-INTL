@@ -25,8 +25,8 @@
       "via": "room"
     },
     "groups": {
-      "collection": "group",
-      "via": "rooms"
+      "via": "rooms",
+      "collection": "group"
     },
     "name": {
       "type": "string"
