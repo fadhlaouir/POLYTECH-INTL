@@ -1,45 +1,60 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* -------------------------------------------------------------------------- */
+/*                                Dependencies                                */
+/* -------------------------------------------------------------------------- */
+
+// Packages
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 
+// Redux
 import { useDispatch, useSelector } from "react-redux";
 import { unwrapResult } from "@reduxjs/toolkit";
 
-import { Form, Button, Modal, notification } from "antd";
+// UI Components
+import { Form, Button, Modal, notification, Row, Col } from "antd";
 import FormBuilder from "antd-form-builder";
 
+// reducers
 import {
   createUser,
   fetchAllUsers,
   fetchUser,
-} from "../../../reducers/User.slice";
+} from "../../reducers/User.slice";
 import {
   fetchAllSpecialities,
   fetchDepartments,
   selectAllSpecialities,
   selectDepartments,
-} from "../../../reducers/Speciality.slice";
-import { Group } from "../../../common/constants";
+} from "../../reducers/Speciality.slice";
 import {
   fetchAlllevels,
   fetchLevels,
   selectAlllevels,
   selectLevels,
-} from "../../../reducers/Level.slice";
-import { fetchAllGroups, selectAllGroups } from "../../../reducers/Group.slice";
+} from "../../reducers/Level.slice";
+import { fetchAllGroups, selectAllGroups } from "../../reducers/Group.slice";
 import {
   fetchAllDepartments,
   selectAllDepartments,
-} from "../../../reducers/Department.slice";
-import { fetchAllRooms, selectAllRooms } from "../../../reducers/Room.slice";
+} from "../../reducers/Department.slice";
+import { fetchAllRooms, selectAllRooms } from "../../reducers/Room.slice";
+import { fetchAllCourses, selectAllCourses } from "../../reducers/Course.slice";
 
+/* -------------------------------------------------------------------------- */
+/*                              Generate Schedule                             */
+/* -------------------------------------------------------------------------- */
 function CreateSchedule({ onChange, onlyFormItems, record }) {
+  /* ---------------------------------- HOOKS --------------------------------- */
   const [showModal, setShowModal] = useState(false);
 
   const dispatch = useDispatch();
 
+  // Selectors
   const departments = useSelector(selectAllDepartments);
   const groups = useSelector(selectAllGroups);
   const rooms = useSelector(selectAllRooms);
+  const courses = useSelector(selectAllCourses);
 
   useEffect(() => {
     dispatch(fetchAllSpecialities());
@@ -48,8 +63,14 @@ function CreateSchedule({ onChange, onlyFormItems, record }) {
     dispatch(fetchAllDepartments());
     dispatch(fetchAllRooms());
     dispatch(fetchAllUsers());
+    dispatch(fetchAllCourses());
   }, []);
 
+  /* ----------------------------- RENDER HELPERS ----------------------------- */
+  /**
+   *
+   * @param {object} entry data entry from form
+   */
   const onClickSubmit = (entry) => {
     // dispatch(
     //   createUser({
@@ -75,6 +96,7 @@ function CreateSchedule({ onChange, onlyFormItems, record }) {
     console.log("entry", entry);
   };
 
+  /* -------------------------------- CONSTANTS ------------------------------- */
   const [form] = Form.useForm();
   // Get Level by selected departments
   const getDepartmentSelectedField = form.getFieldValue("department");
@@ -162,6 +184,59 @@ function CreateSchedule({ onChange, onlyFormItems, record }) {
       ],
       extra: `Maximum students capacity is ${getRoomById?.capacity}`,
     },
+    {
+      key: "course",
+      label: "Course",
+      placeholder: "Select Course",
+      widget: "select",
+      options: courses.map((item) => ({
+        label: item.name,
+        value: item.id,
+      })),
+      rules: [
+        {
+          required: true,
+          message: "Course is required",
+        },
+      ],
+    },
+    { key: "day", label: "Select the Day", widget: "date-picker" },
+    {
+      key: "time",
+      label: "Lecture Date",
+      readOnly: true,
+      viewWidget: () => {
+        return (
+          <Row>
+            <Col span={11}>
+              <FormBuilder
+                form={form}
+                meta={{
+                  key: "startDate",
+                  widget: "date-picker",
+                  widgetProps: { style: { width: "100%" } },
+                  noStyle: true,
+                }}
+              />
+            </Col>
+            <Col span={2} style={{ textAlign: "center" }}>
+              -
+            </Col>
+            <Col span={11}>
+              <FormBuilder
+                form={form}
+                meta={{
+                  key: "endDate",
+                  widget: "date-picker",
+                  widgetProps: { style: { width: "100%" } },
+                  noStyle: true,
+                }}
+              />
+            </Col>
+          </Row>
+        );
+      },
+    },
   ];
 
   // force update form
@@ -174,7 +249,7 @@ function CreateSchedule({ onChange, onlyFormItems, record }) {
         style={{ marginBottom: "20px" }}
         onClick={() => setShowModal(!showModal)}
       >
-        Add Extra Lecture Manualy
+        Add extra Lecture Manualy
       </Button>
       <Modal
         style={{ minHeight: "1500px !important" }}

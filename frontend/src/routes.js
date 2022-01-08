@@ -18,6 +18,7 @@ import Rooms from "./pages/Rooms";
 import NotFoundPage from "./pages/shared/NotFoundPage";
 import Students from "./pages/Students";
 import Teatchers from "./pages/Teatchers";
+import Group from "./pages/Group";
 
 const getSessionToken = () => localStorage.getItem("access_token");
 
@@ -44,18 +45,14 @@ function LayoutRoute({ component: Component, layout: Layout, ...rest }) {
 export const renderRoutes = () => (
   <Router>
     <Switch>
-      <LayoutRoute
-        exact
-        path="/"
-        component={() => <div>Landing page</div>}
-        layout={App}
-      />
+      <LayoutRoute exact path="/" component={Dashboard} layout={App} />
       <LayoutRoute exact path="/dashboard" component={Dashboard} layout={App} />
       <LayoutRoute exact path="/teatchers" component={Teatchers} layout={App} />
       <LayoutRoute exact path="/students" component={Students} layout={App} />
       <LayoutRoute exact path="/courses" component={Courses} layout={App} />
       <LayoutRoute exact path="/rooms" component={Rooms} layout={App} />
       <LayoutRoute exact path="/generator" component={Generator} layout={App} />
+      <LayoutRoute exact path="/groups" component={Group} layout={App} />
       <LayoutRoute
         exact
         path="/departments"
@@ -73,7 +70,7 @@ export const renderRoutes = () => (
         path="/login"
         render={() =>
           getSessionToken() && getSessionToken() !== null ? (
-            <Redirect exact from="/login" to="/" />
+            <Redirect exact from="/login" to="/dashboard" />
           ) : (
             <LoginPage />
           )

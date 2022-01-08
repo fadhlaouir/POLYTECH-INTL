@@ -32,7 +32,7 @@ function TopBar() {
     <Header id="top-bar">
       <Row align="middle" justify="space-between">
         <Col>
-          <Link to="/">
+          <Link to="/dashboard">
             <img className="logo" src="/pi.png" alt="nextProtein logo" />
           </Link>
           <Divider type="vertical" />
@@ -48,13 +48,14 @@ function TopBar() {
             </Col>
             <Col>
               <Button
-                className="logout-btn"
+                type="dashed"
                 icon={<LogoutOutlined />}
                 onClick={() => {
                   dispatch($logout());
-                  history.push("/");
+                  history.push("/login");
                 }}
               >
+                {" "}
                 Logout
               </Button>
             </Col>

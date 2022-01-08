@@ -1,45 +1,41 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* -------------------------------------------------------------------------- */
+/*                                Dependencies                                */
+/* -------------------------------------------------------------------------- */
+
+// Packages
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 
+// Redux
 import { useDispatch, useSelector } from "react-redux";
 import { unwrapResult } from "@reduxjs/toolkit";
 
+// UI Components
 import { Form, Button, Modal, notification } from "antd";
+import { UsergroupAddOutlined, UserSwitchOutlined } from "@ant-design/icons";
 import FormBuilder from "antd-form-builder";
 
-import {
-  createUser,
-  fetchAllUsers,
-  fetchUser,
-} from "../../../reducers/User.slice";
-import {
-  fetchAllSpecialities,
-  fetchDepartments,
-  selectAllSpecialities,
-  selectDepartments,
-} from "../../../reducers/Speciality.slice";
-import { Group } from "../../../common/constants";
-import {
-  fetchAlllevels,
-  fetchLevels,
-  selectAlllevels,
-  selectLevels,
-} from "../../../reducers/Level.slice";
-import {
-  fetchAllGroups,
-  selectAllGroups,
-  selectGroups,
-} from "../../../reducers/Group.slice";
+// reducers
+import { createUser, fetchAllUsers } from "../../reducers/User.slice";
+import { fetchAllSpecialities } from "../../reducers/Speciality.slice";
+import { fetchAlllevels } from "../../reducers/Level.slice";
+import { fetchAllGroups, selectAllGroups } from "../../reducers/Group.slice";
 import {
   fetchAllDepartments,
   selectAllDepartments,
-} from "../../../reducers/Department.slice";
+} from "../../reducers/Department.slice";
+import { updateUser } from "../../reducers/User.slice";
 
-function CreateStudent({ onChange, onlyFormItems, record }) {
+/* -------------------------------------------------------------------------- */
+/*                              Student Component                             */
+/* -------------------------------------------------------------------------- */
+function StudentForm({ onlyFormItems, isCreatedForm, label, record }) {
+  /* ---------------------------------- HOOKS --------------------------------- */
   const [showModal, setShowModal] = useState(false);
-
   const dispatch = useDispatch();
 
+  // Selectors
   const departments = useSelector(selectAllDepartments);
   const groups = useSelector(selectAllGroups);
 
@@ -51,32 +47,65 @@ function CreateStudent({ onChange, onlyFormItems, record }) {
     dispatch(fetchAllUsers());
   }, []);
 
+  /* ----------------------------- RENDER HELPERS ----------------------------- */
+  /**
+   *
+   * @param {object} entry data entry from form
+   */
   const onClickSubmit = (entry) => {
-    dispatch(
-      createUser({
-        ...entry,
-        isStudent: true,
-      })
-    )
-      .then(unwrapResult)
-      .then(() => {
-        notification.success({
-          message: "Student",
-          description: "Created successfully",
-        });
-        setShowModal(!showModal);
-        dispatch(fetchAllUsers());
-      })
-      .catch(() =>
-        notification.error({
-          message: "Student",
-          description: "An error occured",
+    if (record) {
+      dispatch(
+        updateUser({
+          id: record.id,
+          fields: {
+            ...entry,
+          },
         })
-      );
+      )
+        .then(unwrapResult)
+        .then(() => {
+          notification.success({
+            message: "Student",
+            description: "Student has Updated successfully",
+          });
+          setShowModal(!showModal);
+          dispatch(fetchAllUsers());
+        })
+        .catch(() =>
+          notification.error({
+            message: "Student",
+            description: "An error occured",
+          })
+        );
+    } else {
+      dispatch(
+        createUser({
+          ...entry,
+          isStudent: true,
+        })
+      )
+        .then(unwrapResult)
+        .then(() => {
+          notification.success({
+            message: "Student",
+            description: "Student was created successfully",
+          });
+          setShowModal(!showModal);
+          dispatch(fetchAllUsers());
+        })
+        .catch(() =>
+          notification.error({
+            message: "Student",
+            description: "An error occured",
+          })
+        );
+    }
   };
-
+  /* -------------------------------- CONSTANTS ------------------------------- */
   const [form] = Form.useForm();
-
+  /* -------------------------------------------------------------------------- */
+  /*                                   HELPERS                                  */
+  /* -------------------------------------------------------------------------- */
   // Get Level by selected departments
   const getDepartmentSelectedField = form.getFieldValue("department");
   const levelBySelectedDepartment = departments.find(
@@ -90,12 +119,14 @@ function CreateStudent({ onChange, onlyFormItems, record }) {
       gr.level?.id === getLevelSelectedField &&
       gr.department?.id === getDepartmentSelectedField
   );
-
+  console.log("record", record);
   const FormFields = [
     {
       key: "code",
       label: "code",
       placeholder: "code",
+      initialValue: record?.code,
+      disabled: record ? true : false,
       rules: [
         {
           required: true,
@@ -107,6 +138,7 @@ function CreateStudent({ onChange, onlyFormItems, record }) {
       key: "username",
       label: "username",
       placeholder: "username",
+      initialValue: record?.username,
       rules: [
         {
           required: true,
@@ -118,6 +150,7 @@ function CreateStudent({ onChange, onlyFormItems, record }) {
       key: "email",
       label: "Email",
       placeholder: "email",
+      initialValue: record?.email,
       rules: [
         {
           required: true,
@@ -129,12 +162,34 @@ function CreateStudent({ onChange, onlyFormItems, record }) {
       key: "password",
       label: "Password",
       widget: "password",
-
+      onChange: () => {
+        if (form.isFieldTouched("confirmPassword")) {
+          form.validateFields(["confirmPassword"]);
+        }
+      },
       rules: [
-        // This is equivalent with "required: true"
         {
           required: true,
           message: "Password is required",
+        },
+      ],
+    },
+    {
+      key: "confirmPassword",
+      label: "Confirm Passowrd",
+      widget: "password",
+      required: true,
+      rules: [
+        {
+          validator: (rule, value, callback) => {
+            return new Promise((resolve, reject) => {
+              if (value !== form.getFieldValue("password")) {
+                reject(new Error("Two passwords are inconsistent."));
+              } else {
+                resolve();
+              }
+            });
+          },
         },
       ],
     },
@@ -195,16 +250,13 @@ function CreateStudent({ onChange, onlyFormItems, record }) {
   /* -------------------------------- RENDERING ------------------------------- */
   return (
     <div>
-      <Button
-        type="primary"
-        style={{ marginBottom: "20px" }}
-        onClick={() => setShowModal(!showModal)}
-      >
-        Create Student
+      <Button type="primary" onClick={() => setShowModal(!showModal)}>
+        {isCreatedForm ? <UsergroupAddOutlined /> : <UserSwitchOutlined />}
+        {label}
       </Button>
       <Modal
         style={{ minHeight: "1500px !important" }}
-        title="Create"
+        title={label}
         width={1000}
         visible={showModal}
         maskClosable={false}
@@ -233,10 +285,16 @@ function CreateStudent({ onChange, onlyFormItems, record }) {
   );
 }
 
-CreateStudent.propTypes = {
+StudentForm.propTypes = {
   record: PropTypes.object,
+  label: PropTypes.string,
+  isCreatedForm: PropTypes.bool,
   onChange: PropTypes.func,
   onlyFormItems: PropTypes.bool,
 };
 
-export default CreateStudent;
+StudentForm.defaultProps = {
+  isCreatedForm: false,
+};
+
+export default StudentForm;

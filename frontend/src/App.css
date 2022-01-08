@@ -1,5 +1,15 @@
-@import "~antd/dist/antd.css";
-* {
+@import "antd/dist/antd.css";
+.ant-layout-footer {
     background-color: white !important;
-    color: black !important;
+}
+
+.ant-layout-content,
+.main-layout-content {
+    background-color: white !important;
+}
+
+.ant-table-wrapper {
+    clear: both;
+    max-width: 100%;
+    margin-top: 30px !important;
 }

@@ -8,6 +8,7 @@ import Session from "../reducers/Session.slice";
 import Speciality from "../reducers/Speciality.slice";
 import Course from "../reducers/Course.slice";
 import User from "../reducers/User.slice";
+import Event from "../reducers/Event.slice";
 
 export default combineReducers({
     Department,
@@ -18,4 +19,5 @@ export default combineReducers({
     Speciality,
     Course,
     User,
+    Event,
 });

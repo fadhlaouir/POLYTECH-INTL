@@ -18,9 +18,9 @@
       "dominant": true
     },
     "users": {
+      "via": "level",
       "plugin": "users-permissions",
-      "collection": "user",
-      "via": "level"
+      "collection": "user"
     },
     "groups": {
       "via": "level",

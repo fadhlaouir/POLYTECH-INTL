@@ -40,7 +40,7 @@ function App({ children }) {
     (error) => {
       if (error && error.response && error.response.status === 401) {
         dispatch($logout());
-        history.push("/");
+        history.push("/dashboard");
         notification.error({
           message: "Expired Session",
           placement: "topRight",

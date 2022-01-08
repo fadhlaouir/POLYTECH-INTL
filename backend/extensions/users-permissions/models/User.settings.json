@@ -73,24 +73,24 @@
       "model": "speciality",
       "via": "users"
     },
-    "availibilty": {
-      "type": "integer"
-    },
     "level": {
-      "via": "users",
-      "model": "level"
+      "model": "level",
+      "via": "users"
     },
     "room": {
-      "via": "users",
-      "model": "room"
+      "model": "room",
+      "via": "users"
     },
     "courses": {
-      "via": "users",
-      "collection": "course"
+      "collection": "course",
+      "via": "users"
     },
     "groupes": {
-      "via": "users",
-      "collection": "group"
+      "collection": "group",
+      "via": "users"
+    },
+    "isAvailable": {
+      "type": "boolean"
     }
   }
 }

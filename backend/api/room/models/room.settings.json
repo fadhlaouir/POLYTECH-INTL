@@ -16,9 +16,9 @@
       "type": "boolean"
     },
     "users": {
+      "via": "room",
       "plugin": "users-permissions",
-      "collection": "user",
-      "via": "room"
+      "collection": "user"
     },
     "department": {
       "model": "department",
