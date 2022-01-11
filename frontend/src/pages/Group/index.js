@@ -15,32 +15,29 @@ import { Table, Row, Col, Button, Modal, notification } from "antd";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 
 // local Components
-import CourseForm from "../../components/CourseForm";
+import GroupForm from "../../components/GroupForm";
 
 // reducers
 import {
-  deleteCourse,
-  fetchAllCourses,
-  selectAllCourses,
-} from "../../reducers/Course.slice";
+  deleteGroup,
+  fetchAllGroups,
+  selectAllGroups,
+} from "../../reducers/Group.slice";
 import { selectSessionUser } from "../../reducers/Session.slice";
 
-// styles
-import "./index.css";
-
 /* -------------------------------------------------------------------------- */
-/*                                Courses Page                                */
+/*                                 Group Page                                 */
 /* -------------------------------------------------------------------------- */
-function Courses() {
+function Group() {
   /* ---------------------------------- HOOKS --------------------------------- */
   const { confirm } = Modal;
   const dispatch = useDispatch();
 
-  const courses = useSelector(selectAllCourses);
+  const groupes = useSelector(selectAllGroups);
   const user = useSelector(selectSessionUser);
 
   useEffect(() => {
-    dispatch(fetchAllCourses());
+    dispatch(fetchAllGroups());
   }, []);
 
   /* ----------------------------- RENDER HELPERS ----------------------------- */
@@ -53,18 +50,18 @@ function Courses() {
       title: "Are you sure ?",
       icon: <ExclamationCircleOutlined />,
       onOk() {
-        dispatch(deleteCourse(data.id))
+        dispatch(deleteGroup(data.id))
           .then(unwrapResult)
           .then(() => {
             notification.success({
-              message: "Delete Course",
-              description: "Course was Deleted successfully",
+              message: "Delete Group",
+              description: "Group was Deleted successfully",
             });
-            dispatch(fetchAllCourses());
+            dispatch(fetchAllGroups());
           })
           .catch(() =>
             notification.error({
-              message: "Delete Course",
+              message: "Delete Group",
               description: "An error occured",
             })
           );
@@ -73,20 +70,17 @@ function Courses() {
   };
 
   /* -------------------------------- CONSTANTS ------------------------------- */
-  const teatcher = courses?.map((s) => ({
+
+  const groupList = groupes?.map((s) => ({
     id: s.id,
     name: s.name,
-    department: s.departments.map((dp) => dp?.name).join(" , "),
-    duration: s.duration,
-    teatcher: s.users
-      .filter((us) => us.isInstructor)
-      .map((us) => us.username)
-      .join(", "),
+    department: s.department?.name,
+    level: s.level?.name,
   }));
 
   const COURSE_COLUMN = [
     {
-      title: "Course Name",
+      title: "Group Name",
       key: "name",
       dataIndex: "name",
     },
@@ -96,21 +90,16 @@ function Courses() {
       dataIndex: "department",
     },
     {
-      title: "Duration in hours",
-      key: "duration",
-      dataIndex: "duration",
-    },
-    {
-      title: "Teatcher",
-      key: "teatcher",
-      dataIndex: "teatcher",
+      title: "Level",
+      key: "level",
+      dataIndex: "level",
     },
     {
       render: (record) =>
         user.isAdmin && (
           <Row align="middle" justify="space-around">
             <Col>
-              <CourseForm label="Edit" record={record} />
+              <GroupForm label="Edit Group" record={record} />
             </Col>
             <Col>
               <Button
@@ -128,11 +117,11 @@ function Courses() {
 
   return (
     <div>
-      <h1>Courses</h1>
-      {user.isAdmin && <CourseForm label="Create new course" />}
-      <Table columns={COURSE_COLUMN} dataSource={teatcher} />
+      <h1>Group List</h1>
+      {user.isAdmin && <GroupForm label="Create new group" />}
+      <Table columns={COURSE_COLUMN} dataSource={groupList} />
     </div>
   );
 }
 
-export default Courses;
+export default Group;

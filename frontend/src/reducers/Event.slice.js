@@ -1,17 +1,19 @@
-/* eslint-disable no-param-reassign */
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { API_ENDPOINT } from "../common/config";
 
-export const login = createAsyncThunk(
-    "user/login",
-    async(data, { rejectWithValue }) => {
+export const fetchAllEvents = createAsyncThunk(
+    "event/fetchAllEvents",
+    async(id, { rejectWithValue }) => {
         try {
             const config = {
-                method: "post",
-                url: `${API_ENDPOINT}/auth/local`,
-                data,
+                method: "get",
+                url: `${API_ENDPOINT}/events`,
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+                },
             };
+
             const payload = await axios(config);
             return payload.data;
         } catch (err) {
@@ -20,28 +22,13 @@ export const login = createAsyncThunk(
     }
 );
 
-export const fetchAllUsers = createAsyncThunk(
-    "user/fetchAllUsers",
-    async() => {
-        const config = {
-            method: "get",
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-            },
-            url: `${API_ENDPOINT}/users`,
-        };
-        const payload = await axios(config);
-        return payload.data;
-    }
-);
-
-export const createUser = createAsyncThunk(
-    "user/createUser",
+export const createEvent = createAsyncThunk(
+    "event/createEvent",
     async(data, { rejectWithValue }) => {
         try {
             const config = {
                 method: "post",
-                url: `${API_ENDPOINT}/users`,
+                url: `${API_ENDPOINT}/events`,
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("access_token")}`,
                 },
@@ -56,13 +43,13 @@ export const createUser = createAsyncThunk(
     }
 );
 
-export const updateUser = createAsyncThunk(
-    "user/updateUser",
+export const updateEvent = createAsyncThunk(
+    "event/updateEvent",
     async(data, { rejectWithValue }) => {
         try {
             const config = {
                 method: "put",
-                url: `${API_ENDPOINT}/users/${data.id}`,
+                url: `${API_ENDPOINT}/events/${data.id}`,
                 data: data.fields,
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("access_token")}`,
@@ -76,13 +63,13 @@ export const updateUser = createAsyncThunk(
     }
 );
 
-export const deleteUser = createAsyncThunk(
-    "user/deleteUser",
+export const deleteEvent = createAsyncThunk(
+    "event/deleteEvent",
     async(id, { rejectWithValue }) => {
         try {
             const config = {
                 method: "delete",
-                url: `${API_ENDPOINT}/users/${id}`,
+                url: `${API_ENDPOINT}/events/${id}`,
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("access_token")}`,
                 },
@@ -95,13 +82,13 @@ export const deleteUser = createAsyncThunk(
     }
 );
 
-export const fetchUser = createAsyncThunk(
-    "user/fetchUser",
+export const fetchEvent = createAsyncThunk(
+    "event/fetchEvent",
     async(id, { rejectWithValue }) => {
         try {
             const config = {
                 method: "get",
-                url: `${API_ENDPOINT}/users/${id}`,
+                url: `${API_ENDPOINT}/events/${id}`,
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("access_token")}`,
                 },
@@ -115,41 +102,33 @@ export const fetchUser = createAsyncThunk(
     }
 );
 
-// Login Slice
-const User = createSlice({
-    name: "User",
+const Event = createSlice({
+    name: "Event",
     initialState: {
-        user: null,
-        users: [],
-        authenticated: false,
+        events: [],
+        event: null,
         loading: false,
     },
-    reducers: {
-        logout(state) {
-            state.user = null;
-            localStorage.setItem("authenticated", false);
-            localStorage.setItem("access_token", null);
-        },
-    },
     extraReducers: {
-        [login.fulfilled]: (state, action) => {
-            state.user = action.payload.user;
-            localStorage.setItem("authenticated", true);
-            localStorage.setItem("access_token", action.payload.jwt);
-        },
-        [fetchAllUsers.fulfilled]: (state, action) => {
-            state.users = action.payload;
+        [fetchAllEvents.fulfilled]: (state, action) => {
+            state.events = action.payload;
             state.loading = false;
         },
-        [fetchAllUsers.pending]: (state) => {
+        [fetchAllEvents.pending]: (state) => {
+            state.loading = true;
+        },
+        [fetchEvent.fulfilled]: (state, action) => {
+            state.event = action.payload;
+            state.loading = false;
+        },
+        [fetchEvent.pending]: (state) => {
             state.loading = true;
         },
     },
 });
 
-export default User.reducer;
+export default Event.reducer;
 
 // Selectors
-export const selectAll = (state) => state;
-export const selectAllUser = (state) => state.User.users;
-export const selectUser = (state) => state.User.user;
+export const selectAllEvents = (state) => state.Event.events;
+export const selectEvent = (state) => state.Event.event;

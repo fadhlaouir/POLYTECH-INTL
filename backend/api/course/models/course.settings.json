@@ -16,9 +16,9 @@
       "type": "decimal"
     },
     "users": {
+      "via": "courses",
       "plugin": "users-permissions",
       "collection": "user",
-      "via": "courses",
       "dominant": true
     },
     "rooms": {

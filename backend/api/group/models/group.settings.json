@@ -13,9 +13,9 @@
       "type": "string"
     },
     "users": {
+      "via": "groupes",
       "plugin": "users-permissions",
       "collection": "user",
-      "via": "groupes",
       "dominant": true
     },
     "rooms": {

@@ -1,12 +1,10 @@
-.ant-layout-sider {
-    background-color: red !important;
-    color: black !important;
-}
-
 .ant-typography {
+    color: white !important;
     padding-right: 20px;
+    text-decoration: wavy !important;
+    font-family: Georgia, 'Times New Roman', Times, serif;
 }
 
 .logo {
-    width: 150px !important;
+    height: 60px;
 }

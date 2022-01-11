@@ -27,17 +27,17 @@ function Dashboard() {
     <div className="dashboard">
       <Row align="middle" justify="space-around">
         <Col>
-          <Card title="Number of teatchers">
+          <Card title="Number of teatchers" className="card">
             <p>{user.filter((u) => u.isInstructor).length}</p>
           </Card>
         </Col>
         <Col>
-          <Card title="Number of Students">
+          <Card title="Number of Students" className="card">
             <p>{user.filter((u) => u.isStudent).length}</p>
           </Card>
         </Col>
         <Col>
-          <Card title="Number of Departments">
+          <Card title="Number of Departments" className="card">
             <p>{departments?.length}</p>
           </Card>
         </Col>

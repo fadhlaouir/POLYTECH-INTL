@@ -1,9 +1,18 @@
 .login-page-layout {
     background-color: white;
     text-align: center;
-    padding: 10%;
+    padding: 5% 20%;
 }
 
 .logo {
     max-width: 400px;
+}
+
+.polytech {
+    width: 100%;
+    height: 100vh;
+}
+
+.login-button {
+    width: 250px !important;
 }

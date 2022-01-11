@@ -3,12 +3,11 @@
 /* -------------------------------------------------------------------------- */
 
 // Packages
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React from "react";
+import { Link } from "react-router-dom";
 
 // UI Components
-import { Result, Button } from 'antd';
-
+import { Result, Button } from "antd";
 
 /* -------------------------------------------------------------------------- */
 /*                               Not Found Page                               */
@@ -21,7 +20,7 @@ function NotFoundPage() {
       title="404"
       subTitle="Sorry, the page you visited does not exist."
       extra={
-        <Link to="/">
+        <Link to="/dashboard">
           <Button type="primary">Back Home</Button>
         </Link>
       }

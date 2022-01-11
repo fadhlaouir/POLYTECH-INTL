@@ -1,28 +1,50 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* -------------------------------------------------------------------------- */
+/*                                Dependencies                                */
+/* -------------------------------------------------------------------------- */
+
+// Packages
 import { Table, Row, Col, Button, Modal, notification } from "antd";
 import { useEffect } from "react";
-import { ExclamationCircleOutlined } from "@ant-design/icons";
+
+// Redux
 import { unwrapResult } from "@reduxjs/toolkit";
 import { useSelector, useDispatch } from "react-redux";
 
-import CreateRoom from "../../components/Rooms/CreateRoom";
-import UpdateRoom from "../../components/Rooms/UpdateRoom";
+// UI Components
+import { ExclamationCircleOutlined } from "@ant-design/icons";
 
+// Local Components
+import RoomForm from "../../components/RoomForm";
+
+// reducers
 import {
   deleteRoom,
   fetchAllRooms,
   selectAllRooms,
 } from "../../reducers/Room.slice";
 
+/* -------------------------------------------------------------------------- */
+/*                                  Room Page                                 */
+/* -------------------------------------------------------------------------- */
 function Rooms() {
+  /* ---------------------------------- HOOKS --------------------------------- */
+  const { confirm } = Modal;
+
+  // Selectors
   const Rooms = useSelector(selectAllRooms);
 
-  const { confirm } = Modal;
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(fetchAllRooms());
   }, []);
 
+  /* ----------------------------- RENDER HELPERS ----------------------------- */
+  /**
+   *
+   * @param {object} entry data entry from form
+   */
   const removeRoom = (data) => {
     confirm({
       title: "Are you sure ?",
@@ -46,7 +68,7 @@ function Rooms() {
       },
     });
   };
-
+  /* -------------------------------- CONSTANTS ------------------------------- */
   const room = Rooms?.map((b) => ({
     id: b.id,
     name: b.name,
@@ -74,7 +96,7 @@ function Rooms() {
       render: (record) => (
         <Row align="middle">
           <Col>
-            <UpdateRoom record={record} />
+            <RoomForm label="Edit Room" record={record} />
           </Col>
           <Col style={{ marginLeft: "20px" }}>
             <Button type="primary" onClick={() => removeRoom(record)} danger>
@@ -86,10 +108,11 @@ function Rooms() {
     },
   ];
 
+  /* -------------------------------- RENDERING ------------------------------- */
   return (
     <div>
       <h1>Rooms</h1>
-      <CreateRoom />
+      <RoomForm label="Create new Room" />
       <Table columns={ROOM_COLUMN} dataSource={room} />
     </div>
   );

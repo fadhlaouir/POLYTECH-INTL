@@ -1,13 +1,33 @@
-import React, { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+/* eslint-disable react-hooks/exhaustive-deps */
+/* -------------------------------------------------------------------------- */
+/*                                Dependencies                                */
+/* -------------------------------------------------------------------------- */
 
-import { Layout, Menu } from "antd";
+// Packages
+import React from "react";
+import { Link } from "react-router-dom";
 
-import "./TopBar.css";
+// Redux
 import { useSelector } from "react-redux";
-import { selectDepartments } from "../reducers/Speciality.slice";
-import { selectAllDepartments } from "../reducers/Department.slice";
+
+// UI Components
+import { Layout, Menu } from "antd";
+import {
+  UserOutlined,
+  HomeOutlined,
+  TeamOutlined,
+  ScheduleOutlined,
+  AlignLeftOutlined,
+  SnippetsOutlined,
+  MenuUnfoldOutlined,
+  SwapOutlined,
+} from "@ant-design/icons";
+
+// Reducers
 import { selectSessionUser } from "../reducers/Session.slice";
+
+// Style
+import "./TopBar.css";
 
 /* -------------------------------------------------------------------------- */
 /*                                  Side Menu                                 */
@@ -15,81 +35,76 @@ import { selectSessionUser } from "../reducers/Session.slice";
 function SideMenu() {
   /* ---------------------------------- HOOKS --------------------------------- */
   const { Sider } = Layout;
-  const { SubMenu } = Menu;
   const user = useSelector(selectSessionUser);
-  const departments = useSelector(selectAllDepartments);
 
   /* -------------------------------- RENDERING ------------------------------- */
   return (
     <Sider>
-      <Menu defaultSelectedKeys={["0"]} mode="inline">
+      <Menu
+        defaultSelectedKeys={["1"]}
+        mode="inline"
+        theme="dark"
+        style={{ height: "100vh" }}
+      >
         <Menu.Item key="1">
-          <Link to="/dashboard">Dashboard</Link>
+          <Link to="/dashboard">
+            <HomeOutlined /> Dashboard
+          </Link>
         </Menu.Item>
-        {user.isAdmin === true && (
+        {user.isAdmin && (
           <Menu.Item key="2">
-            <Link to="/teatchers">All Teatchers</Link>
+            <Link to="/teatchers">
+              <UserOutlined /> Instructors
+            </Link>
           </Menu.Item>
         )}
-        {user.isAdmin === true && (
+        {user.isAdmin && (
           <Menu.Item key="3">
-            <Link to="/students">All Students</Link>
+            <Link to="/students">
+              <TeamOutlined /> Students
+            </Link>
           </Menu.Item>
         )}
-        {(user.isAdmin === true || user.isInstructor === true) && (
+
+        {user.isAdmin && (
           <Menu.Item key="4">
-            <Link to="/courses">Courses</Link>
+            <Link to="/departments">
+              <AlignLeftOutlined /> Departments
+            </Link>
           </Menu.Item>
         )}
-        {user.isAdmin === true && (
+        {(user.isAdmin || user.isInstructor) && (
           <Menu.Item key="5">
-            <Link to="/rooms">Rooms</Link>
+            <Link to="/courses">
+              <SnippetsOutlined /> Courses
+            </Link>
           </Menu.Item>
         )}
-        {user.isAdmin === true && (
+        {user.isAdmin && (
           <Menu.Item key="6">
-            <Link to="/departments">Departments</Link>
+            <Link to="/groups">
+              <MenuUnfoldOutlined /> Groups
+            </Link>
           </Menu.Item>
         )}
-        {/* <SubMenu key="sub1" title="Filter By Department">
-          {departments?.map((dp) => (
-            <SubMenu key={dp.id} title={dp.name}>
-              {dp.levels.map((level) => (
-                <SubMenu key={Math.random()} title={level.name}>
-                  <Menu.Item key={Math.random()}>
-                    <Link
-                      to={{
-                        pathname: "/students",
-                        level: level.name,
-                        department: dp.name,
-                      }}
-                    >
-                      Students
-                    </Link>
-                  </Menu.Item>
-                  <Menu.Item key={Math.random()}>
-                    <Link
-                      to={{
-                        pathname: "/teatchers",
-                        level: level.name,
-                        department: dp.name,
-                      }}
-                    >
-                      Teatchers
-                    </Link>
-                  </Menu.Item>
-                </SubMenu>
-              ))}
-            </SubMenu>
-          ))}
-        </SubMenu> */}
-        {user.isAdmin === true && (
+        {user.isAdmin && (
           <Menu.Item key="7">
-            <Link to="/generator">Generator</Link>
+            <Link to="/rooms">
+              <MenuUnfoldOutlined /> Rooms
+            </Link>
           </Menu.Item>
         )}
-        <Menu.Item key="8">
-          <Link to="/calendar">Calendar</Link>
+        {user.isAdmin && (
+          <Menu.Item key="8">
+            <Link to="/generator">
+              <SwapOutlined /> Generator
+            </Link>
+          </Menu.Item>
+        )}
+        <Menu.Item key="9">
+          <Link to="/calendar">
+            <ScheduleOutlined /> Calendar
+          </Link>
         </Menu.Item>
       </Menu>
     </Sider>
